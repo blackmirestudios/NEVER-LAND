@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEVERLAND DATABASE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* CRT Monitor Effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            z-index: 9999;
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.9; }
+            5% { opacity: 0.8; }
+            10% { opacity: 0.9; }
+            15% { opacity: 1; }
+            20% { opacity: 0.9; }
+            25% { opacity: 0.8; }
+            30% { opacity: 0.9; }
+            35% { opacity: 1; }
+            40% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.2) 100%);
+            z-index: 9998;
+            pointer-events: none;
+        }
+
+        .crt-curvature {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+            box-shadow: 
+                0 0 50px rgba(0, 255, 0, 0.1),
+                inset 0 0 30px rgba(0, 0, 0, 0.9);
+            z-index: 9997;
+            pointer-events: none;
+        }
+
+        .crt-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 255, 0, 0.05) 0%, rgba(0, 0, 0, 0) 70%);
+            z-index: 9996;
+            pointer-events: none;
+        }
+
+        @font-face {
+            font-family: 'Pixel';
+            src: url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        }
+        body {
+            font-family: 'Pixel', monospace;
+            background-color: #000;
+            color: #0f0;
+            image-rendering: pixelated;
+            position: relative;
+            overflow: hidden;
+            line-height: 1.2;
+            font-size: 18px;
+        }
+        .pixel-border {
+            border: 4px solid #0f0;
+            box-shadow: 0 0 10px #0f0;
+        }
+        .pixel-text {
+            text-shadow: 0 0 5px #0f0;
+            letter-spacing: 0;
+        }
+        .typing {
+            border-right: 2px solid #0f0;
+            animation: blink 0.75s step-end infinite;
+        }
+        @keyframes blink {
+            from, to { border-color: transparent }
+            50% { border-color: #0f0 }
+        }
+        .terminal {
+            background-color: rgba(0, 10, 0, 0.9);
+            border: 1px solid #0a0;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
+        .random-glitch {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABOSURBVGhD7c4xAQAgDAAxSP6V/RddCD+QkJuZ2X3X3Xfdfdfdd91919133X3X3Xfdfdfdd91919133X3X3Xfdfdfdd91919133X3X3Xfdfdfdd9191wEAAPgBQ5QAAZQ5Q3QAAAAASUVORK5CYII=');
+            opacity: 0;
+            z-index: 1001;
+            pointer-events: none;
+            mix-blend-mode: lighten;
+        }
+
+        .glitch-trigger {
+            position: relative;
+        }
+        .glitch-trigger::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            opacity: 0;
+            animation: glitch-anim 5s infinite alternate;
+        }
+        @keyframes glitch-anim {
+            0% { clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%); }
+            10% { clip-path: polygon(0 15%, 100% 15%, 100% 15%, 0 15%); }
+            20% { clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%); }
+            30% { clip-path: polygon(0 1%, 100% 1%, 100% 2%, 0 2%); }
+            40% { clip-path: polygon(0 33%, 100% 33%, 100% 33%, 0 33%); }
+            50% { clip-path: polygon(0 44%, 100% 44%, 100% 44%, 0 44%); }
+            60% { clip-path: polygon(0 50%, 100% 50%, 100% 20%, 0 20%); }
+            70% { clip-path: polygon(0 70%, 100% 70%, 100% 70%, 0 70%); }
+            80% { clip-path: polygon(0 80%, 100% 80%, 100% 80%, 0 80%); }
+            90% { clip-path: polygon(0 50%, 100% 50%, 100% 55%, 0 55%); }
+            100% { clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%); }
+        }
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 255, 0, 0.1) 0%,
+                rgba(0, 255, 0, 0) 10%
+            );
+            background-size: 100% 4px;
+            animation: scanline 4s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+
+        #binary-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+            pointer-events: none;
+            background: 
+                repeating-linear-gradient(
+                    to bottom,
+                    transparent 0px,
+                    transparent 20px,
+                    rgba(0, 255, 0, 0.1) 20px,
+                    rgba(0, 255, 0, 0.1) 21px
+                ),
+                repeating-linear-gradient(
+                    to right,
+                    rgba(0, 255, 0, 0.05) 0px,
+                    rgba(0, 255, 0, 0.05) 1px,
+                    transparent 1px,
+                    transparent 40px
+                );
+            overflow: hidden;
+        }
+
+        #binary-background::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                rgba(0, 0, 0, 0.9) 50%,
+                transparent 50%
+            );
+            background-size: 100% 4px;
+        }
+
+        .binary-column {
+            position: absolute;
+            top: 0;
+            width: 1em;
+            height: 100%;
+            color: rgba(0, 255, 0, 0.6);
+            font-size: 12px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            animation: binaryScroll linear infinite;
+        }
+        .binary-row {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 1em;
+            color: rgba(0, 255, 0, 0.2);
+            font-size: 12px;
+            font-family: monospace;
+            white-space: nowrap;
+            animation: binaryScrollHorizontal linear infinite;
+        }
+        @keyframes binaryScrollHorizontal {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes binaryScroll {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        #glitch-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABOSURBVGhD7c4xAQAgDAAxSP6V/RddCD+QkJuZ2X3X3Xfdfdfdd91919133X3X3Xfdfdfdd91919133X3X3Xfdfdfdd91919133X3X3Xfdfdfdd9191wEAAPgBQ5QAAZQ5Q3QAAAAASUVORK5CYII=');
+            opacity: 0;
+            z-index: 1000;
+            pointer-events: none;
+            animation: glitch-effect 5s infinite;
+        }
+
+        @keyframes glitch-effect {
+            0% { 
+                opacity: 1;
+                transform: translate(0);
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+            10% { 
+                opacity: 0.8;
+                transform: translate(-5px, 5px);
+                clip-path: polygon(0 33%, 100% 33%, 100% 35%, 0 35%);
+            }
+            20% {
+                opacity: 0.9;
+                transform: translate(5px, -5px);
+                clip-path: polygon(0 44%, 100% 44%, 100% 46%, 0 46%);
+            }
+            30% {
+                opacity: 1;
+                transform: translate(0);
+                clip-path: polygon(0 50%, 100% 50%, 100% 70%, 0 70%);
+            }
+            40% {
+                opacity: 0.7;
+                transform: translate(-3px, -3px);
+                clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translate(0);
+                clip-path: polygon(0 20%, 100% 20%, 100% 21%, 0 21%);
+            }
+            60% {
+                opacity: 0.9;
+                transform: translate(7px, 3px);
+                clip-path: polygon(0 80%, 100% 80%, 100% 85%, 0 85%);
+            }
+            70% {
+                opacity: 1;
+                transform: translate(0);
+                clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
+            }
+            80% {
+                opacity: 0.7;
+                transform: translate(-7px, -3px);
+                clip-path: polygon(0 0, 100% 0, 100% 60%, 0 60%);
+            }
+            90% {
+                opacity: 0.8;
+                transform: translate(0);
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(0);
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            }
+        }
+
+        .hacked-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: red;
+            font-size: 2rem;
+            text-align: center;
+            animation: glitch-effect 0.5s infinite;
+        }
+
+        .hacked-screen p {
+            margin: 1rem;
+            text-shadow: 0 0 10px red;
+        }
+
+        .clown-face {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            pointer-events: none;
+            font-family: monospace;
+            font-size: 8px;
+            line-height: 1;
+            color: #ff0000;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .clown-face::before {
+            content: "8 8 0 0 0 0 0 0 8 8\A0 0 8 8 0 0 8 8 0 0\A0 8 0 0 8 8 0 0 8 0\A8 0 0 0 0 0 0 0 0 8\A8 0 0 0 0 0 0 0 0 8\A0 8 0 0 8 8 0 0 8 0\A0 0 8 0 0 0 0 8 0 0\A0 0 0 8 8 8 8 0 0 0";
+            white-space: pre;
+            animation: clown-pulse 3s infinite alternate;
+        }
+
+        @keyframes clown-pulse {
+            0% { opacity: 0.05; transform: scale(0.95); }
+            50% { opacity: 0.1; transform: scale(1); }
+            100% { opacity: 0.15; transform: scale(1.05); }
+        }
+
+        .distortion {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255, 0, 0, 0.1),
+                    rgba(255, 0, 0, 0.1) 1px,
+                    transparent 1px,
+                    transparent 2px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(0, 255, 255, 0.1),
+                    rgba(0, 255, 255, 0.1) 1px,
+                    transparent 1px,
+                    transparent 2px
+                );
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+
+        #username-prompt,
+        #game-challenge {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+        }
+
+        #username-input:focus {
+            outline: none;
+            box-shadow: 0 0 5px #0f0;
+        }
+
+        .animate-shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes glitch-anim {
+            0% { clip-path: polygon(0 2%, 100% 2%, 100% 5%, 0 5%); }
+            10% { clip-path: polygon(0 15%, 100% 15%, 100% 15%, 0 15%); }
+            20% { clip-path: polygon(0 10%, 100% 10%, 100% 20%, 0 20%); }
+            30% { clip-path: polygon(0 1%, 100% 1%, 100% 2%, 0 2%); }
+            40% { clip-path: polygon(0 33%, 100% 33%, 100% 33%, 0 33%); }
+            50% { clip-path: polygon(0 44%, 100% 44%, 100% 44%, 0 44%); }
+            60% { clip-path: polygon(0 50%, 100% 50%, 100% 20%, 0 20%); }
+            70% { clip-path: polygon(0 70%, 100% 70%, 100% 70%, 0 70%); }
+            80% { clip-path: polygon(0 80%, 100% 80%, 100% 80%, 0 80%); }
+            90% { clip-path: polygon(0 50%, 100% 50%, 100% 55%, 0 55%); }
+            100% { clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="crt-curvature"></div>
+    <div class="crt-glow"></div>
+    <div class="scanline"></div>
+    <div id="binary-background"></div>
+    <div id="glitch-overlay"></div>
+    <div id="clown-face" class="clown-face hidden"></div>
+    
+    <!-- Windows Desktop -->
+    <div id="windows-desktop" class="fixed inset-0 flex items-center justify-center" style="background-color: #000;">
+        <div class="scanline"></div>
+        <div id="binary-background-desktop"></div>
+        <div class="absolute top-4 left-4 w-20 text-center cursor-pointer" onclick="openGame()">
+            <div class="w-16 h-16 mx-auto bg-gradient-to-b from-green-700 to-green-900 border border-green-600 flex items-center justify-center mb-1 shadow-lg rounded-sm">
+                <span class="text-4xl font-bold text-green-400">?</span>
+            </div>
+            <span class="text-green-400 text-xs font-mono">Neverland.exe</span>
+        </div>
+        
+        <div class="absolute top-4 left-28 w-20 text-center cursor-pointer" onclick="openDocument()">
+            <div class="w-16 h-16 mx-auto bg-gradient-to-b from-blue-700 to-blue-900 border border-blue-600 flex flex-col items-center justify-center mb-1 shadow-lg rounded-sm">
+                <div class="w-10 h-1 bg-blue-400 mb-1"></div>
+                <div class="w-8 h-1 bg-blue-400 mb-1"></div>
+                <div class="w-10 h-1 bg-blue-400"></div>
+            </div>
+            <span class="text-green-400 text-xs font-mono">Readme.txt</span>
+        </div>
+        
+        <div class="absolute top-28 left-4 w-20 text-center cursor-pointer" onclick="openIdentificationDocument()">
+            <div class="w-16 h-16 mx-auto bg-gradient-to-b from-purple-700 to-purple-900 border border-purple-600 flex flex-col items-center justify-center mb-1 shadow-lg rounded-sm">
+                <div class="w-10 h-1 bg-purple-400 mb-1"></div>
+                <div class="w-8 h-1 bg-purple-400 mb-1"></div>
+                <div class="w-10 h-1 bg-purple-400"></div>
+            </div>
+            <span class="text-green-400 text-xs font-mono">ID_Names.txt</span>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-90 p-1 border-t border-green-600">
+            <div class="flex items-center">
+                <button class="px-3 py-1 bg-gradient-to-b from-green-700 to-green-800 text-green-400 text-sm font-mono ml-2 rounded-sm shadow">Start</button>
+                <div class="w-px h-6 bg-green-600 mx-2"></div>
+                <div class="flex-1 bg-gray-900 h-6 rounded-sm flex items-center px-2 text-xs text-green-400 border border-green-600">
+                    <span>Neverland Database v4.2.1</span>
+                </div>
+                <div class="flex items-center space-x-2 mr-2">
+                    <div class="text-green-400 text-xs font-mono">EN</div>
+                    <div class="text-green-400 text-xs font-mono">00:00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Username Prompt -->
+    <div id="username-prompt" class="terminal p-6 max-w-md w-full pixel-border">
+        <h1 class="text-2xl font-bold mb-4 text-green-400">IDENTITY VERIFICATION</h1>
+        <p class="text-green-300 mb-4">> ENTER AUTHORIZED USERNAME:</p>
+        <input type="text" id="username-input" class="w-full p-2 bg-black text-green-400 border border-green-500 mb-4" autocomplete="off">
+        <button onclick="verifyUsername()" class="p-2 bg-black text-green-500 border-2 border-green-500 hover:bg-green-900 hover:text-white">
+            > VERIFY
+        </button>
+    </div>
+
+    <!-- Game Challenge -->
+    <div id="game-challenge" class="terminal p-6 max-w-md w-full pixel-border hidden">
+        <h1 class="text-2xl font-bold mb-4 text-green-400">UNAUTHORIZED ACCESS</h1>
+        <p class="text-green-300 mb-4">> WOULD YOU LIKE TO PLAY A GAME?</p>
+        <div class="flex gap-4">
+            <button onclick="playGame()" class="flex-1 p-2 bg-black text-green-500 border-2 border-green-500 hover:bg-green-900 hover:text-white">
+                > YES
+            </button>
+            <button onclick="closeSite()" class="flex-1 p-2 bg-black text-red-500 border-2 border-red-500 hover:bg-red-900 hover:text-white">
+                > NO
+            </button>
+        </div>
+    </div>
+    
+    <!-- Security Questions -->
+    <div id="security-questions" class="terminal p-6 max-w-3xl w-full pixel-border hidden" style="border-color: #ff0000; box-shadow: 0 0 10px #ff0000;">
+        <h1 class="text-2xl font-bold mb-4 text-red-400">SECURITY VERIFICATION REQUIRED</h1>
+        <p class="mb-4 text-red-300">> ANSWER ALL QUESTIONS TO ACCESS MAINFRAME</p>
+        
+        <div class="space-y-4 mb-6">
+            <div class="security-question">
+                <p class="text-red-300 mb-2">1. WHAT WAS THE NAME OF THE MYSTERIOUS CIRCUS?</p>
+                <input type="text" class="w-full p-2 bg-black text-red-400 border border-red-500 security-answer" data-answer="neverland">
+            </div>
+            
+            <div class="security-question">
+                <p class="text-red-300 mb-2">2. WHAT WAS THE ROLE OF THE MAIN ANTAGONIST?</p>
+                <input type="text" class="w-full p-2 bg-black text-red-400 border border-red-500 security-answer" data-answer="jester">
+            </div>
+            
+            <div class="security-question">
+                <p class="text-red-300 mb-2">3. WHAT WAS THE NAME OF THE FIRST VICTIM?</p>
+                <input type="text" class="w-full p-2 bg-black text-red-400 border border-red-500 security-answer" data-answer="nick">
+            </div>
+            
+            <div class="security-question">
+                <p class="text-red-300 mb-2">4. IN WHAT YEAR DID THE INCIDENT OCCUR?</p>
+                <input type="text" class="w-full p-2 bg-black text-red-400 border border-red-500 security-answer" data-answer="1965">
+            </div>
+            
+            <div class="security-question">
+                <p class="text-red-300 mb-2">5. WHAT WAS THE FATE OF THE CIRCUS?</p>
+                <input type="text" class="w-full p-2 bg-black text-red-400 border border-red-500 security-answer" data-answer="burn">
+            </div>
+        </div>
+        
+        <button onclick="verifySecurityAnswers()" class="p-2 bg-black text-red-500 border-2 border-red-500 hover:bg-red-900 hover:text-white">
+            > VERIFY ANSWERS
+        </button>
+        <p id="security-error" class="mt-2 text-red-500 hidden">! VERIFICATION FAILED - ANSWERS INCORRECT !</p>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="main-menu" class="terminal p-6 max-w-3xl w-full pixel-border glitch-trigger hidden">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2 text-green-400" id="main-title">_</h1>
+            <p class="text-xs text-green-600 mb-2">[SECURE CONNECTION ESTABLISHED]</p>
+            <div class="h-1 bg-green-500 mb-6"></div>
+            <p class="mb-4 text-green-300">> INITIALIZING SECURITY PROTOCOLS...</p>
+            <p class="mb-4 text-green-300">> LOADING ENCRYPTED FILES...</p>
+            <p class="mb-6 text-green-300">> WARNING: UNAUTHORIZED ACCESS WILL BE LOGGED</p>
+        </div>
+        
+        <div class="grid grid-cols-1 gap-4">
+            <button onclick="startGame()" class="p-2 bg-black text-green-400 border border-green-600 hover:bg-green-900 hover:text-green-100 transition-all duration-100 text-base">
+                > INITIATE SYSTEM BREACH [ALT+F4]
+            </button>
+            <button onclick="showInstructions()" class="p-3 bg-black text-green-500 border-2 border-green-500 hover:bg-green-900 hover:text-white transition-all duration-200 text-lg font-mono">
+                > ACCESS PROTOCOL MANUAL
+            </button>
+            <button onclick="showCredits()" class="p-3 bg-black text-green-500 border-2 border-green-500 hover:bg-green-900 hover:text-white transition-all duration-200 text-lg font-mono">
+                > SYSTEM CREDITS
+            </button>
+        </div>
+    </div>
+    
+    <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-green-800 p-1 text-xs text-green-600 flex justify-between px-4">
+        <span>CONNECTION: SECURE</span>
+        <span>ENCRYPTION: AES-256</span>
+        <span>USER: ANONYMOUS</span>
+        <span>STATUS: READY</span>
+    </div>
+    
+    <!-- Instructions -->
+    <div id="instructions" class="terminal p-6 max-w-3xl w-full pixel-border hidden">
+        <h2 class="text-2xl font-bold mb-4 pixel-text">ACCESS PROTOCOL MANUAL</h2>
+        <div class="space-y-4 text-green-300">
+            <p>> YOU MUST CRACK 5 SECURITY LAYERS</p>
+            <p>> EACH LAYER REQUIRES A 4-CHARACTER CODE</p>
+            <p>> USE SYSTEM CLUES TO DETERMINE CODES</p>
+            <p>> SUCCESS GRANTS ACCESS TO CLASSIFIED FILES</p>
+            <p>> FAILURE WILL TRIGGER SECURITY ALERT</p>
+        </div>
+        <button onclick="backToMenu()" class="mt-6 p-2 bg-black text-green-500 border-2 border-green-500 hover:bg-green-900 hover:text-white transition-all">
+            > BACK TO MAINFRAME
+        </button>
+    </div>
+    
+    <!-- Credits -->
+    <div id="credits" class="terminal p-6 max-w-3xl w-full pixel-border hidden">
+        <h2 class="text-2xl font-bold mb-4 pixel-text">SYSTEM CREDITS</h2>
+        <div class="space-y-4 text-green-300">
+            <p>> DEVELOPED BY: BLACK HAT OPERATIVE #042</p>
+            <p>> GRAPHICS: PIXEL INTRUSION ENGINE</p>
+            <p>> AUDIO: SYNTHWAVE SECURITY FEED</p>
+            <p>> SPECIAL THANKS TO: THE UNDERGROUND</p>
+        </div>
+        <button onclick="backToMenu()" class="mt-6 p-2 bg-black text-green-500 border-2 border-green-500 hover:bg-green-900 hover:text-white transition-all">
+            > BACK TO MAINFRAME
+        </button>
+    </div>
+    
+    <!-- Game Screen -->
+    <div id="game-screen" class="terminal p-6 max-w-3xl w-full pixel-border hidden">
+        <div class="flex justify-between items-center mb-4">
+            <h2 id="level-title" class="text-xl font-bold pixel-text">SECURITY LAYER 1/5</h2>
+            <div id="timer" class="text-green-400">TIME: 00:00</div>
+        </div>
+        
+        <div id="level-container">
+            <div id="level-1" class="level">
+                <p class="mb-4 text-green-300">> ENTER 4-DIGIT CODE TO BYPASS FIREWALL</p>
+                <p class="mb-4 text-green-300">> CLUE: THE YEAR IN WHICH THE CIRCUS WAS FOUNDED</p>
+                <div class="flex gap-2 mb-6">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                </div>
+                <button onclick="checkCode(1)" class="p-2 bg-black text-green-500 border-2 border-green-500 hover:bg-green-900 hover:text-white">
+                    > EXECUTE
+                </button>
+                <p id="error-1" class="mt-2 text-red-500 hidden">! ACCESS DENIED !</p>
+            </div>
+            
+            <div id="level-2" class="level hidden">
+                <p class="mb-4 text-green-300">> SECONDARY ENCRYPTION LAYER DETECTED</p>
+                <p class="mb-4 text-green-300">> CLUE: HALLOWEEN DATE (FORMAT: DDMM)</p>
+                <div class="flex gap-2 mb-6">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                </div>
+                <button onclick="checkCode(2)" class="p-2 bg-black text-green-500 border-2 border-green-500 hover:bg-green-900 hover:text-white">
+                    > EXECUTE
+                </button>
+                <p id="error-2" class="mt-2 text-red-500 hidden">! ACCESS DENIED !</p>
+            </div>
+            
+            <div id="level-3" class="level hidden">
+                <p class="mb-4 text-green-300">> ADMINISTRATOR PASSWORD REQUIRED</p>
+                <p class="mb-4 text-green-300">> CLUE: HOW MANY SECONDS ARE IN 23 MINUTES</p>
+                <div class="flex gap-2 mb-6">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                </div>
+                <button onclick="checkCode(3)" class="p-2 bg-black text-green-500 border-2 border-green-500 hover:bg-green-900 hover:text-white">
+                    > EXECUTE
+                </button>
+                <p id="error-3" class="mt-2 text-red-500 hidden">! ACCESS DENIED !</p>
+            </div>
+            
+            <div id="level-4" class="level hidden">
+                <p class="mb-4 text-green-300">> BIOMETRIC OVERRIDE REQUIRED</p>
+                <p class="mb-4 text-green-300">> CLUE: THE YEAR IN WHICH THE CIRCUS WAS ABANDONED</p>
+                <div class="flex gap-2 mb-6">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                </div>
+                <button onclick="checkCode(4)" class="p-2 bg-black text-green-500 border-2 border-green-500 hover:bg-green-900 hover:text-white">
+                    > EXECUTE
+                </button>
+                <p id="error-4" class="mt-2 text-red-500 hidden">! ACCESS DENIED !</p>
+            </div>
+            
+            <div id="level-5" class="level hidden">
+                <p class="mb-4 text-green-300">> FINAL ENCRYPTION LAYER DETECTED</p>
+                <p class="mb-4 text-green-300">> CLUE: WHAT YOU WILL BE IF YOU ENTER THE DATABASE ILLEGALLY</p>
+                <div class="flex gap-2 mb-6">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                    <input type="text" maxlength="1" class="w-12 h-12 text-center bg-black border-2 border-green-500 text-green-500 text-xl font-mono">
+                </div>
+                <button onclick="checkCode(5)" class="p-2 bg-black text-green-500 border-2 border-green-500 hover:bg-green-900 hover:text-white">
+                    > EXECUTE
+                </button>
+                <p id="error-5" class="mt-2 text-red-500 hidden">! ACCESS DENIED !</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Win Screen -->
+    <div id="win-screen" class="terminal p-6 max-w-3xl w-full pixel-border hidden">
+        <h2 class="text-2xl font-bold mb-4 pixel-text">SYSTEM BREACH SUCCESSFUL</h2>
+        <p class="mb-4 text-green-300">> ALL SECURITY LAYERS COMPROMISED</p>
+        <p class="mb-4 text-green-300">> ACCESSING CLASSIFIED FILES...</p>
+        
+        <div class="mt-6 mb-6 p-4 bg-black border-2 border-green-500">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="w-4 h-4 bg-green-500"></div>
+                <p class="text-green-500">SECRET_DOCUMENT.txt</p>
+            </div>
+            <div class="terminal p-4 text-green-300 text-sm">
+                <p>> FILE DECRYPTION COMPLETE</p>
+                <p>> ---------------------------------</p>
+                <p>> CIRCUS NOCTURNE - CLASSIFIED DOSSIER</p>
+                <p>> ---------------------------------</p>
+                <p>> ESTABLISHED: 1972 | LOCATION: CLASSIFIED</p>
+                <p>> </p>
+                <p>> KNOWN FACTS:</p>
+                <p>> - 14 PERFORMERS DISAPPEARED 1985-1999</p>
+                <p>> - ANIMALS EXHIBITED ABNORMAL BEHAVIOR</p>
+                <p>> - AUDIENCE MEMBERS REPORTED MEMORY LOSS</p>
+                <p>> </p>
+                <p>> COVER-UP OPERATION:</p>
+                <p>> - ALL RECORDS PURGED IN 2001</p>
+                <p>> - WITNESSES SILENCED OR DISAPPEARED</p>
+                <p>> - LOCATION DEMOLISHED IN 2003</p>
+                <p>> </p>
+                <p>> WARNING: DO NOT INVESTIGATE FURTHER</p>
+                <p>> THIS FILE WILL SELF-DESTRUCT IN 10 SECONDS</p>
+            </div>
+        </div>
+        
+        <button onclick="backToMenu()" class="mt-4 p-2 bg-black text-green-500 border-2 border-green-500 hover:bg-green-900 hover:text-white">
+            > RETURN TO MAINFRAME
+        </button>
+    </div>
+    
+    <script>
+        // Create binary background
+        function createBinaryBackground() {
+            const container = document.getElementById('binary-background');
+            const columnCount = Math.floor(window.innerWidth / 15);
+            const rowCount = Math.floor(window.innerHeight / 20);
+            
+            // Vertical binary streams
+            for (let i = 0; i < columnCount; i++) {
+                const column = document.createElement('div');
+                column.className = 'binary-column';
+                column.style.left = `${i * 15}px`;
+                column.style.animationDuration = `${3 + Math.random() * 10}s`;
+                column.style.animationDelay = `${Math.random() * 3}s`;
+                
+                let binaryString = '';
+                for (let j = 0; j < 50; j++) {
+                    binaryString += Math.random() > 0.5 ? '1' : '0';
+                }
+                
+                column.textContent = binaryString;
+                container.appendChild(column);
+            }
+            
+            // Horizontal binary streams
+            for (let i = 0; i < rowCount; i++) {
+                const row = document.createElement('div');
+                row.className = 'binary-row';
+                row.style.top = `${i * 20}px`;
+                row.style.animationDuration = `${5 + Math.random() * 15}s`;
+                row.style.animationDelay = `${Math.random() * 5}s`;
+                
+                let binaryString = '';
+                for (let j = 0; j < 100; j++) {
+                    binaryString += Math.random() > 0.5 ? '1' : '0';
+                }
+                
+                row.textContent = binaryString;
+                container.appendChild(row);
+            }
+        }
+
+        // Initialize binary backgrounds
+        createBinaryBackground();
+        createDesktopBinaryBackground();
+
+        // Hide all screens initially except desktop
+        document.getElementById('username-prompt').classList.add('hidden');
+        document.getElementById('game-challenge').classList.add('hidden');
+        document.getElementById('security-questions').classList.add('hidden');
+        document.getElementById('main-menu').classList.add('hidden');
+        document.getElementById('instructions').classList.add('hidden');
+        document.getElementById('credits').classList.add('hidden');
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('win-screen').classList.add('hidden');
+
+        // Random glitch effect
+        const glitchElement = document.createElement('div');
+        glitchElement.className = 'random-glitch';
+        document.body.appendChild(glitchElement);
+
+        function triggerRandomGlitch() {
+            // Random duration between 3-10 seconds
+            const delay = Math.random() > 0.7 ? 10000 : (Math.random() > 0.5 ? 5000 : 3000);
+            
+            setTimeout(() => {
+                // Random intensity
+                const intensity = Math.random() * 0.7 + 0.3;
+                
+                // Animate glitch
+                glitchElement.style.opacity = intensity;
+                glitchElement.style.animation = `glitch-effect ${Math.random() * 0.5 + 0.2}s`;
+                
+                // Reset after animation
+                setTimeout(() => {
+                    glitchElement.style.opacity = 0;
+                    glitchElement.style.animation = 'none';
+                }, 500);
+                
+                // Schedule next glitch
+                triggerRandomGlitch();
+            }, delay);
+        }
+
+        // Start glitch cycle
+        triggerRandomGlitch();
+
+        // Create binary background for desktop
+        function createDesktopBinaryBackground() {
+            const container = document.getElementById('binary-background-desktop');
+            const columnCount = Math.floor(window.innerWidth / 15);
+            const rowCount = Math.floor(window.innerHeight / 20);
+            
+            // Vertical binary streams
+            for (let i = 0; i < columnCount; i++) {
+                const column = document.createElement('div');
+                column.className = 'binary-column';
+                column.style.left = `${i * 15}px`;
+                column.style.animationDuration = `${3 + Math.random() * 10}s`;
+                column.style.animationDelay = `${Math.random() * 3}s`;
+                
+                let binaryString = '';
+                for (let j = 0; j < 50; j++) {
+                    binaryString += Math.random() > 0.5 ? '1' : '0';
+                }
+                
+                column.textContent = binaryString;
+                container.appendChild(column);
+            }
+            
+            // Horizontal binary streams
+            for (let i = 0; i < rowCount; i++) {
+                const row = document.createElement('div');
+                row.className = 'binary-row';
+                row.style.top = `${i * 20}px`;
+                row.style.animationDuration = `${5 + Math.random() * 15}s`;
+                row.style.animationDelay = `${Math.random() * 5}s`;
+                
+                let binaryString = '';
+                for (let j = 0; j < 100; j++) {
+                    binaryString += Math.random() > 0.5 ? '1' : '0';
+                }
+                
+                row.textContent = binaryString;
+                container.appendChild(row);
+            }
+        }
+
+        // Function to open the game from desktop
+        function openGame() {
+            document.getElementById('windows-desktop').classList.add('hidden');
+            document.getElementById('username-prompt').classList.remove('hidden');
+        }
+
+        // Function to open document from desktop
+        function openDocument() {
+            // Create a document viewer modal
+            const docViewer = document.createElement('div');
+            docViewer.className = 'fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50';
+            docViewer.innerHTML = `
+                <div class="terminal p-6 max-w-2xl w-full pixel-border" style="border-color: #0066ff; box-shadow: 0 0 10px #0066ff;">
+                    <h2 class="text-xl font-bold mb-4 text-blue-400">README.TXT</h2>
+                    <div class="h-64 overflow-auto text-blue-300 text-sm font-mono leading-relaxed">
+                        <p>> NEVERLAND DATABASE - CLASSIFIED</p>
+                        <p>> ---------------------------------</p>
+                        <p>> WARNING: UNAUTHORIZED ACCESS PROHIBITED</p>
+                        <p>> </p>
+                        <p>> SYSTEM PROTOCOLS:</p>
+                        <p>> - MULTI-LAYER ENCRYPTION ACTIVE</p>
+                        <p>> - INTRUSION DETECTION ENABLED</p>
+                        <p>> - ALL ACTIVITIES LOGGED</p>
+                        <p>> </p>
+                        <p>> SECURITY MEASURES:</p>
+                        <p>> - BIOMETRIC VERIFICATION REQUIRED</p>
+                        <p>> - DYNAMIC PASSWORD ROTATION</p>
+                        <p>> - SELF-DESTRUCT MECHANISM ARMED</p>
+                        <p>> </p>
+                        <p>> ACCESS INSTRUCTIONS:</p>
+                        <p>> 1. LAUNCH NEVERLAND.EXE</p>
+                        <p>> 2. PROVIDE VALID CREDENTIALS</p>
+                        <p>> 3. COMPLETE SECURITY CHALLENGE</p>
+                        <p>> 4. BYPASS FIREWALL PROTECTIONS</p>
+                        <p>> </p>
+                        <p>> NOTE: FAILURE WILL TRIGGER ALERT</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="mt-4 p-2 bg-black text-blue-500 border-2 border-blue-500 hover:bg-blue-900 hover:text-white">
+                        > CLOSE
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(docViewer);
+        }
+
+        // Function to open identification document from desktop
+        function openIdentificationDocument() {
+            // Create a document viewer modal
+            const docViewer = document.createElement('div');
+            docViewer.className = 'fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50';
+            docViewer.innerHTML = `
+                <div class="terminal p-6 max-w-2xl w-full pixel-border" style="border-color: #800080; box-shadow: 0 0 10px #800080;">
+                    <h2 class="text-xl font-bold mb-4 text-purple-400">ID_NAMES.TXT</h2>
+                    <div class="h-64 overflow-auto text-purple-300 text-sm font-mono leading-relaxed">
+                        <p>> IDENTIFICATION NAMES - CLASSIFIED</p>
+                        <p>> ---------------------------------</p>
+                        <p>> VALID ACCESS NAMES:</p>
+                        <p>> </p>
+                        <p>> - THE PROTAGONIST'S NAME</p>
+                        <p>> - THE CHOCOLATE FACTORY OWNER'S NAME</p>
+                        <p>> - THE ANONYMOUS GENTLEMAN'S NAME</p>
+                        <p>> </p>
+                        <p>> WARNING:</p>
+                        <p>> THESE ARE THE ONLY ACCEPTED IDENTITIES</p>
+                        <p>> FOR SYSTEM ACCESS.</p>
+                        <p>> ALL OTHER ATTEMPTS WILL BE LOGGED</p>
+                        <p>> AND REPORTED TO SECURITY.</p>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="mt-4 p-2 bg-black text-purple-500 border-2 border-purple-500 hover:bg-purple-900 hover:text-white">
+                        > CLOSE
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(docViewer);
+        }
+
+        // Username verification
+        function verifyUsername() {
+            const username = document.getElementById('username-input').value.trim();
+            const validUsernames = ['Charlie', 'Claire', 'MRE'];
+            
+            if (validUsernames.includes(username)) {
+                document.getElementById('username-prompt').classList.add('hidden');
+                document.getElementById('security-questions').classList.remove('hidden');
+                document.querySelector('.fixed.bottom-0 span:nth-child(3)').textContent = `USER: ${username}`;
+                // Show the clown face background
+                document.getElementById('clown-face').classList.remove('hidden');
+            } else {
+                document.getElementById('username-prompt').classList.add('hidden');
+                document.getElementById('game-challenge').classList.remove('hidden');
+                // Hide clown face for incorrect username
+                document.getElementById('clown-face').classList.add('hidden');
+            }
+        }
+
+        function verifySecurityAnswers() {
+            const answers = document.querySelectorAll('.security-answer');
+            let allCorrect = true;
+            
+            answers.forEach(input => {
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = input.getAttribute('data-answer').toLowerCase();
+                
+                if (userAnswer !== correctAnswer) {
+                    allCorrect = false;
+                    input.classList.add('border-red-600', 'bg-red-900');
+                } else {
+                    input.classList.remove('border-red-600', 'bg-red-900');
+                    input.classList.add('border-green-500', 'bg-green-900');
+                }
+            });
+            
+            if (allCorrect) {
+                document.getElementById('security-questions').classList.add('hidden');
+                document.getElementById('main-menu').classList.remove('hidden');
+            } else {
+                document.getElementById('security-error').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('security-error').classList.add('hidden');
+                }, 3000);
+            }
+        }
+
+        function playGame() {
+            document.getElementById('game-challenge').classList.add('hidden');
+            
+            // Create hacked screen
+            const hackedScreen = document.createElement('div');
+            hackedScreen.className = 'hacked-screen';
+            hackedScreen.innerHTML = `
+                <div class="distortion"></div>
+                <p>WARNING: SYSTEM COMPROMISED</p>
+                <p>YOUR DEVICE HAS BEEN HACKED</p>
+                <p>NO ESCAPE POSSIBLE</p>
+                <p style="font-size: 1rem; color: white;">Terminating all processes...</p>
+            `;
+            document.body.appendChild(hackedScreen);
+            
+            // Add scary effects
+            setTimeout(() => {
+                hackedScreen.style.backgroundColor = '#200000';
+                hackedScreen.style.color = 'white';
+                hackedScreen.innerHTML += `<p style="color: red;">SYSTEM LOCKED</p>`;
+            }, 3000);
+            
+            setTimeout(() => {
+                hackedScreen.innerHTML += `<p style="color: red;">INITIATING DATA WIPE</p>`;
+            }, 5000);
+            
+            setTimeout(() => {
+                hackedScreen.innerHTML += `<p style="color: red;">GOODBYE</p>`;
+                document.body.style.cursor = 'none';
+            }, 7000);
+            
+            // After 10 seconds, show the security question
+            setTimeout(() => {
+                document.body.removeChild(hackedScreen);
+                document.body.style.pointerEvents = 'auto';
+                document.body.style.cursor = 'default';
+                showSecurityQuestion();
+            }, 10000);
+        }
+
+        function showSecurityQuestion() {
+            // Create security question screen
+            const questionScreen = document.createElement('div');
+            questionScreen.className = 'hacked-screen';
+            questionScreen.style.backgroundColor = '#300000';
+            questionScreen.innerHTML = `
+                <div class="distortion"></div>
+                <p style="color: red; font-size: 1.5rem;">SECURITY CHALLENGE</p>
+                <p style="color: white; margin: 20px 0;">> WHAT YEAR WAS THE FIRST COMPUTER VIRUS CREATED?</p>
+                <input type="text" id="security-answer" class="w-48 p-2 bg-black text-red-400 border-2 border-red-500 text-center" autocomplete="off">
+                <button onclick="checkSecurityAnswer()" class="mt-4 p-2 bg-black text-red-500 border-2 border-red-500 hover:bg-red-900 hover:text-white">
+                    > SUBMIT
+                </button>
+                <p id="security-error" class="mt-2 text-red-500 hidden">! INCORRECT ANSWER - SYSTEM WILL TERMINATE !</p>
+            `;
+            document.body.appendChild(questionScreen);
+            
+            // Focus on input
+            setTimeout(() => {
+                document.getElementById('security-answer').focus();
+            }, 100);
+        }
+
+        function checkSecurityAnswer() {
+            const answer = document.getElementById('security-answer').value.trim();
+            if (answer === "1987") {
+                // Correct answer - proceed to hacker terminal
+                document.body.innerHTML = '';
+                showHackerTerminal();
+            } else {
+                // Wrong answer - show error and close site
+                document.getElementById('security-error').classList.remove('hidden');
+                setTimeout(() => {
+                    document.body.innerHTML = '<div class="fixed inset-0 bg-black flex items-center justify-center"><p class="text-red-500 text-xl">ACCESS DENIED - TERMINATING CONNECTION</p></div>';
+                    setTimeout(() => {
+                        window.close();
+                        document.body.innerHTML = '';
+                    }, 2000);
+                }, 1500);
+            }
+        }
+
+        function showHackerTerminal() {
+            // Clear the body and show hacker terminal
+            document.body.innerHTML = '';
+            document.body.className = 'min-h-screen flex items-center justify-center p-4';
+            document.body.innerHTML = `
+                <div class="scanline"></div>
+                <div id="binary-background"></div>
+                <div id="glitch-overlay"></div>
+                
+                <div class="hacker-terminal pixel-border" style="width: 90%; height: 80vh; background: #000; position: relative;">
+                    <div class="terminal-tabs" style="display: flex; background: #111; border-bottom: 2px solid #0f0;">
+                        <button class="tab-btn active-tab" data-tab="main" style="padding: 10px 20px; background: #0f0; color: #000; border: none; font-family: 'Pixel', monospace;">
+                            MAINFRAME_ACCESS
+                        </button>
+                        <button class="tab-btn" data-tab="files" style="padding: 10px 20px; background: #111; color: #0f0; border: none; font-family: 'Pixel', monospace;">
+                            FILESYSTEM
+                        </button>
+                        <button class="tab-btn" data-tab="network" style="padding: 10px 20px; background: #111; color: #0f0; border: none; font-family: 'Pixel', monospace;">
+                            NETWORK_SCAN
+                        </button>
+                        <button class="tab-btn" data-tab="camera" style="padding: 10px 20px; background: #111; color: #0f0; border: none; font-family: 'Pixel', monospace;">
+                            CAMERA_FEED
+                        </button>
+                        <button class="tab-btn" data-tab="security" style="padding: 10px 20px; background: #111; color: #f00; border: none; font-family: 'Pixel', monospace;">
+                            SECURITY_QA
+                        </button>
+                    </div>
+                    
+                    <div class="tab-content" style="height: calc(100% - 50px); overflow: auto; padding: 20px;">
+                        <div id="main-tab" class="tab-pane active">
+                            <div class="hacker-text" style="font-family: monospace; color: #0f0; line-height: 1.4;">
+                                <p>> INITIALIZING CORE PROTOCOLS... [OK]</p>
+                                <p>> BYPASSING SECURITY LAYERS... [SUCCESS]</p>
+                                <p>> ESTABLISHING ROOT ACCESS... [GRANTED]</p>
+                                <p>> WARNING: TRACE DETECTED - COUNTERMEASURES ENGAGED</p>
+                                <p>> ENCRYPTION KEYS: 7F3A9B2C4D6E8F01</p>
+                                <p>> SESSION ID: XK7#9@M2*P5$Q1!R8</p>
+                                <p>> MEMORY ALLOCATION: 87% UTILIZED</p>
+                                <p>> NETWORK THROUGHPUT: 2.4GB/S</p>
+                                <p>> CPU TEMPERATURE: 78°C - CRITICAL</p>
+                                <p>> UPLOADING DATA STREAM... [23% COMPLETE]</p>
+                                <p>> EXECUTING PAYLOAD: CORRUPT_SYSTEM.EXE</p>
+                                <p>> WARNING: UNKNOWN PROCESS DETECTED</p>
+                                <p>> SCANNING FOR INTRUSIONS... [CLEAR]</p>
+                                <p>> OVERRIDING SECURITY PROTOCOLS... [DONE]</p>
+                            </div>
+                        </div>
+                        
+                        <div id="files-tab" class="tab-pane" style="display: none;">
+                            <div class="hacker-text" style="font-family: monospace; color: #0f0; line-height: 1.4;">
+                                <p>> ACCESSING FILE SYSTEM... [OK]</p>
+                                <p>> ROOT DIRECTORY:</p>
+                                <p>> [DIR] system/</p>
+                                <p>> [DIR] users/</p>
+                                <p>> [DIR] temp/</p>
+                                <p>> [DIR] logs/</p>
+                                <p>> [FILE] passwords.enc (ENCRYPTED)</p>
+                                <p>> [FILE] surveillance_data.bin (2.4GB)</p>
+                                <p>> [FILE] blacklist.txt (ACCESS DENIED)</p>
+                                <p>> [FILE] backup_2024.tar.gz (CORRUPTED)</p>
+                                <p>> EXECUTING: decryption_algorithm --file=passwords.enc</p>
+                                <p>> DECRYPTION PROGRESS: █████░░░░░ 52%</p>
+                                <p>> WARNING: FILE INTEGRITY CHECK FAILED</p>
+                                <p>> SCANNING FOR MALWARE... [1 THREAT DETECTED]</p>
+                                <p>> QUARANTINING FILE: surveillance_data.bin</p>
+                            </div>
+                        </div>
+                        
+                        <div id="network-tab" class="tab-pane" style="display: none;">
+                            <div class="hacker-text" style="font-family: monospace; color: #0f0; line-height: 1.4;">
+                                <p>> INITIATING NETWORK SCAN... [STARTED]</p>
+                                <p>> SCANNING SUBNET: 192.168.1.0/24</p>
+                                <p>> ACTIVE HOSTS FOUND: 14</p>
+                                <p>> VULNERABILITIES DETECTED: 3 CRITICAL</p>
+                                <p>> EXECUTING PORT SCAN... [COMPLETE]</p>
+                                <p>> OPEN PORTS: 22, 80, 443, 3389</p>
+                                <p>> BRUTE FORCE ATTEMPT: PORT 22... [FAILED]</p>
+                                <p>> TRYING DEFAULT CREDENTIALS... [SUCCESS]</p>
+                                <p>> ACCESS GRANTED TO: SECURITY_CAM_SERVER</p>
+                                <p>> DOWNLOADING CONFIG FILES... [IN PROGRESS]</p>
+                                <p>> BANDWIDTH UTILIZATION: 87%</p>
+                                <p>> PACKET LOSS: 2.3%</p>
+                                <p>> LATENCY: 48ms</p>
+                                <p>> ROUTING TABLE UPDATED</p>
+                                <p>> FIREWALL BYPASSED</p>
+                            </div>
+                        </div>
+                        
+                        <div id="camera-tab" class="tab-pane" style="display: none;">
+                            <div class="hacker-text" style="font-family: monospace; color: #0f0; line-height: 1.4;">
+                                <p>> ACCESSING SURVEILLANCE SYSTEM... [OK]</p>
+                                <p>> CAMERAS ONLINE: 8/16</p>
+                                <p>> FEED 1: LOBBY - [LIVE]</p>
+                                <p>> FEED 2: SERVER_ROOM - [OFFLINE]</p>
+                                <p>> FEED 3: HALLWAY_A - [LIVE]</p>
+                                <p>> FEED 4: HALLWAY_B - [NO SIGNAL]</p>
+                                <p>> FEED 5: OFFICE_12 - [LIVE - MOTION DETECTED]</p>
+                                <p>> FEED 6: ENTRANCE - [LIVE]</p>
+                                <p>> FEED 7: PARKING_LOT - [LOW QUALITY]</p>
+                                <p>> FEED 8: ROOFTOP - [OFFLINE]</p>
+                                <p>> RECORDING FEED 5... [STARTED]</p>
+                                <p>> ENHANCING VIDEO QUALITY... [PROCESSING]</p>
+                                <p>> FACIAL RECOGNITION: 3 MATCHES FOUND</p>
+                                <p>> SAVING FOOTAGE TO: /captured/feed5.mp4</p>
+                                <p>> WARNING: CAMERA 2 REBOOTING</p>
+                            </div>
+                        </div>
+                        
+                        <div id="security-tab" class="tab-pane" style="display: none;">
+                            <div class="hacker-text" style="font-family: monospace; color: #f00; line-height: 1.4;">
+                                <p>> SECURITY QUESTIONNAIRE REQUIRED</p>
+                                <p>> ANSWER ALL QUESTIONS TO REGAIN ACCESS</p>
+                                <br>
+                                <form id="security-questions">
+                                    <p>> WHAT WAS THE NAME OF THE MYSTERIOUS CIRCUS?</p>
+                                    <input type="text" name="q1" style="background: black; color: #f00; border: 1px solid #f00; padding: 5px; width: 200px;"><br><br>
+                                    
+                                    <p>> WHAT WAS THE ROLE OF THE MAIN ANTAGONIST?</p>
+                                    <input type="text" name="q2" style="background: black; color: #f00; border: 1px solid #f00; padding: 5px; width: 200px;"><br><br>
+                                    
+                                    <p>> WHAT WAS THE NAME OF THE FIRST VICTIM?</p>
+                                    <input type="text" name="q3" style="background: black; color: #f00; border: 1px solid #f00; padding: 5px; width: 200px;"><br><br>
+                                    
+                                    <p>> IN WHAT YEAR DID THE INCIDENT OCCUR?</p>
+                                    <input type="text" name="q4" style="background: black; color: #f00; border: 1px solid #f00; padding: 5px; width: 200px;"><br><br>
+                                    
+                                    <p>> WHAT WAS THE FATE OF THE CIRCUS?</p>
+                                    <input type="text" name="q5" style="background: black; color: #f00; border: 1px solid #f00; padding: 5px; width: 200px;"><br><br>
+                                    
+                                    <button type="submit" style="background: black; color: #f00; border: 1px solid #f00; padding: 10px 20px; cursor: pointer;">> SUBMIT</button>
+                                </form>
+                                <p id="security-result" style="color: #f00;"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-green-800 p-1 text-xs text-green-600 flex justify-between px-4">
+                    <span>CONNECTION: COMPROMISED</span>
+                    <span>ENCRYPTION: BROKEN</span>
+                    <span>USER: INTRUDER</span>
+                    <span>STATUS: DANGER</span>
+                </div>
+            `;
+
+            // Add tab switching functionality
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons and panes
+                    tabButtons.forEach(btn => {
+                        btn.style.background = '#111';
+                        btn.style.color = '#0f0';
+                    });
+                    tabPanes.forEach(pane => pane.style.display = 'none');
+                    
+                    // Add active class to clicked button and corresponding pane
+                    button.style.background = '#0f0';
+                    button.style.color = '#000';
+                    const tabId = button.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-tab`).style.display = 'block';
+                });
+            });
+
+            // Reinitialize binary background
+            createBinaryBackground();
+            triggerRandomGlitch();
+            
+            // Add security questions handler
+            document.getElementById('security-questions').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const answers = {
+                    q1: 'neverland',
+                    q2: 'jester', 
+                    q3: 'nick',
+                    q4: '1965',
+                    q5: 'burn'
+                };
+                
+                let allCorrect = true;
+                
+                for (let i = 1; i <= 5; i++) {
+                    const userAnswer = this[`q${i}`].value.trim().toLowerCase();
+                    if (userAnswer !== answers[`q${i}`]) {
+                        allCorrect = false;
+                        break;
+                    }
+                }
+                
+                const resultElement = document.getElementById('security-result');
+                if (allCorrect) {
+                    resultElement.textContent = '> ACCESS GRANTED. RETURNING TO MAINFRAME...';
+                    setTimeout(() => {
+                        document.body.innerHTML = '';
+                        location.reload();
+                    }, 2000);
+                } else {
+                    resultElement.textContent = '! ACCESS DENIED ! ANSWERS INCORRECT. TRY AGAIN.';
+                }
+            });
+        }
+
+        function closeSite() {
+            document.getElementById('game-challenge').classList.add('hidden');
+            document.getElementById('glitch-overlay').style.opacity = '1';
+            document.getElementById('glitch-overlay').style.animation = 'none';
+            
+            setTimeout(() => {
+                document.body.innerHTML = '<div class="fixed inset-0 bg-black flex items-center justify-center"><p class="text-red-500 text-xl">CONNECTION TERMINATED</p></div>';
+                setTimeout(() => {
+                    window.close();
+                    document.body.innerHTML = '';
+                }, 1000);
+            }, 500);
+        }
+
+        // Typewriter effect for main title
+        const title = "NEVERLAND DATABASE v4.2.1";
+        let titleIndex = 0;
+        const titleElement = document.getElementById('main-title');
+        
+        function typeTitle() {
+            if (titleIndex < title.length) {
+                titleElement.textContent = title.substring(0, titleIndex + 1) + (titleIndex < title.length - 1 ? '_' : '');
+                titleIndex++;
+                setTimeout(typeTitle, Math.random() * 100 + 50);
+            } else {
+                titleElement.classList.remove('typing');
+            }
+        }
+        
+        titleElement.classList.add('typing');
+        typeTitle();
+
+        // Game state
+        let currentLevel = 1;
+        let startTime;
+        let timerInterval;
+        
+        // Correct codes for each level
+        const correctCodes = {
+            1: "1945",
+            2: "1031",
+            3: "1380",
+            4: "1990",
+            5: "DEAD"
+        };
+        
+        // Game functions
+        function startGame() {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            startTimer();
+            updateLevelDisplay();
+            focusFirstInput(1);
+        }
+        
+        function showInstructions() {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('instructions').classList.remove('hidden');
+        }
+        
+        function showCredits() {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('credits').classList.remove('hidden');
+        }
+        
+        function backToMenu() {
+            document.getElementById('main-menu').classList.remove('hidden');
+            document.getElementById('instructions').classList.add('hidden');
+            document.getElementById('credits').classList.add('hidden');
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('win-screen').classList.add('hidden');
+            resetGame();
+        }
+        
+        function startTimer() {
+            startTime = new Date();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+        
+        function updateTimer() {
+            const now = new Date();
+            const elapsed = new Date(now - startTime);
+            const minutes = elapsed.getUTCMinutes().toString().padStart(2, '0');
+            const seconds = elapsed.getUTCSeconds().toString().padStart(2, '0');
+            document.getElementById('timer').textContent = `TIME: ${minutes}:${seconds}`;
+        }
+        
+        function updateLevelDisplay() {
+            document.getElementById('level-title').textContent = `SECURITY LAYER ${currentLevel}/5`;
+            
+            // Hide all levels
+            document.querySelectorAll('.level').forEach(level => {
+                level.classList.add('hidden');
+            });
+            
+            // Show current level
+            document.getElementById(`level-${currentLevel}`).classList.remove('hidden');
+        }
+        
+        function focusFirstInput(level) {
+            const firstInput = document.querySelector(`#level-${level} input:first-child`);
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }
+        
+        function checkCode(level) {
+            const inputs = document.querySelectorAll(`#level-${level} input`);
+            let enteredCode = '';
+            
+            inputs.forEach(input => {
+                enteredCode += input.value.toUpperCase();
+            });
+            
+            if (enteredCode === correctCodes[level]) {
+                // Correct code
+                document.getElementById(`error-${level}`).classList.add('hidden');
+                
+                if (level === 5) {
+                    // Game completed
+                    clearInterval(timerInterval);
+                    document.getElementById('game-screen').classList.add('hidden');
+                    document.getElementById('win-screen').classList.remove('hidden');
+                    
+                    // Start self-destruct countdown
+                    setTimeout(() => {
+                        document.getElementById('win-screen').querySelector('.terminal').innerHTML += 
+                            '<p class="text-red-500 mt-4">> FILE DESTROYED. TRACING ORIGIN...</p>';
+                    }, 10000);
+                } else {
+                    // Next level
+                    currentLevel++;
+                    updateLevelDisplay();
+                    focusFirstInput(currentLevel);
+                }
+            } else {
+                // Wrong code
+                document.getElementById(`error-${level}`).classList.remove('hidden');
+                
+                // Shake inputs
+                inputs.forEach(input => {
+                    input.classList.add('animate-shake');
+                    setTimeout(() => {
+                        input.classList.remove('animate-shake');
+                    }, 500);
+                });
+            }
+        }
+        
+        function resetGame() {
+            currentLevel = 1;
+            clearInterval(timerInterval);
+            
+            // Clear all inputs
+            document.querySelectorAll('input').forEach(input => {
+                input.value = '';
+            });
+            
+            // Hide all errors
+            document.querySelectorAll('[id^="error-"]').forEach(error => {
+                error.classList.add('hidden');
+            });
+        }
+        
+        // Handle input navigation
+        document.addEventListener('input', function(e) {
+            if (e.target.tagName === 'INPUT' && e.target.value.length === e.target.maxLength) {
+                const next = e.target.nextElementSibling;
+                if (next && next.tagName === 'INPUT') {
+                    next.focus();
+                }
+            }
+        });
+        
+        // Handle backspace navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Backspace') {
+                const target = e.target;
+                if (target.tagName === 'INPUT' && target.value.length === 0) {
+                    const prev = target.previousElementSibling;
+                    if (prev && prev.tagName === 'INPUT') {
+                        prev.focus();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

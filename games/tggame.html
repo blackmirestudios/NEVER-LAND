@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spooky Carnival Target Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Eater&display=swap');
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #2a1a04;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='%232a1a04'/%3E%3Cpath d='M0 0h2v100H0z' fill='%2341300c'/%3E%3Cpath d='M2 0h2v100H2z' fill='%23392808'/%3E%3Cpath d='M4 0h2v100H4z' fill='%23514010'/%3E%3Cpath d='M6 0h2v100H6z' fill='%23392808'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse at center, rgba(90, 60, 10, 0.3) 0%, rgba(40, 25, 5, 0.8) 100%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            color: #ff0051;
+            overflow: hidden;
+            image-rendering: pixelated;
+            position: relative;
+        }
+        
+        /* Intense vignette effect focused on edges */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.9) 100%);
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        /* Blood splatter effect around edges */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cpath fill='%23a00' opacity='0.1' d='M45,0C25,10,5,30,0,50c5,20,25,40,45,50s40,10,60,0s40-30,45-50C145,30,125,10,105,0S65-10,45,0z'/%3E%3C/svg%3E"),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cpath fill='%23a00' opacity='0.15' d='M30,0C10,15,0,35,0,50c0,15,10,35,30,50s40,15,60,0s30-35,30-50C120,35,110,15,90,0S50-15,30,0z' transform='rotate(45 100 100)'/%3E%3C/svg%3E");
+            background-position: top left, bottom right;
+            background-repeat: no-repeat;
+            background-size: 300px, 250px;
+            pointer-events: none;
+            z-index: 99;
+            mix-blend-mode: multiply;
+        }
+        
+        .pixelated {
+            image-rendering: pixelated;
+        }
+        
+        .scene {
+            background: 
+                linear-gradient(45deg, #3a2000 0%, #5a2900 25%, #3a2000 50%, #5a2900 75%, #3a2000 100%),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='%235a2900'/%3E%3Cpath d='M0 0l100 100' stroke='%233a2000' stroke-width='0.5'/%3E%3Cpath d='M100 0L0 100' stroke='%233a2000' stroke-width='0.5'/%3E%3C/svg%3E");
+            background-blend-mode: overlay;
+            background-size: 200% 200%, 100px 100px;
+            animation: wood-grain 20s linear infinite;
+            border: 8px solid #3a2000;
+            box-shadow: 
+                0 0 25px #8a2be2, 
+                inset 0 0 20px rgba(0, 0, 0, 0.8),
+                0 0 15px rgba(139, 0, 0, 0.6),
+                0 0 40px rgba(255, 0, 81, 0.4) inset,
+                0 8px 18px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @keyframes wood-grain {
+            0% { background-position: 0% 0%, 0 0; }
+            100% { background-position: 100% 100%, 100px 100px; }
+        }
+        
+        .scene::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, 
+                    rgba(139, 69, 19, 0.1) 0%, 
+                    transparent 15%, 
+                    transparent 85%, 
+                    rgba(139, 69, 19, 0.1) 100%),
+                linear-gradient(0deg, 
+                    rgba(90, 50, 10, 0.2) 0%, 
+                    transparent 15%, 
+                    transparent 85%, 
+                    rgba(90, 50, 10, 0.2) 100%),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(60, 30, 0, 0.1) 2px,
+                    rgba(60, 30, 0, 0.1) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+            mix-blend-mode: multiply;
+        }
+        
+        /* Instructions panel */
+        .instructions {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #ff0051;
+            box-shadow: 0 0 15px #ff0051;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 20px auto;
+        }
+        
+        .instructions h3 {
+            color: #ff5e00;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .instructions p {
+            margin-bottom: 8px;
+            color: #8a2be2;
+        }
+        
+        .scene::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(255, 165, 0, 0.1) 0%, transparent 40%),
+                radial-gradient(ellipse at 80% 70%, rgba(160, 82, 45, 0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 40% 80%, rgba(210, 105, 30, 0.1) 0%, transparent 30%),
+                linear-gradient(to bottom, 
+                    rgba(0, 0, 0, 0.4) 0%, 
+                    transparent 5%,
+                    transparent 95%,
+                    rgba(0, 0, 0, 0.4) 100%);
+            pointer-events: none;
+            z-index: 2;
+            mix-blend-mode: overlay;
+        }
+        
+        .target {
+            background: 
+                radial-gradient(circle, #ff0000 0%, #8b0000 60%, #600 90%),
+                url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1' fill='%23ff5e00' fill-opacity='0.3'/%3E%3C/svg%3E");
+            border: 3px solid #ff5e00;
+            box-shadow: 0 0 15px #ff0000, inset 0 0 12px #ff5e00;
+            border-radius: 50%;
+            z-index: 20;
+            position: relative;
+        }
+        
+        .target::before {
+            content: '✖';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(0, 0, 0, 0.4);
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .target-bar {
+            position: absolute;
+            height: 10px;
+            background: 
+                linear-gradient(to bottom, #8b4513 0%, #6b3100 30%, #8b4513 70%, #6b3100 100%),
+                url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%235a2900' fill-opacity='0.4'%3E%3Cpath d='M0 0h3v3H0V0zm3 3h3v3H3V3z'/%3E%3C/g%3E%3C/svg%3E");
+            border: 2px solid #5a2900;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            z-index: 10;
+        }
+        
+        .target-stand {
+            position: absolute;
+            width: 12px;
+            height: 40px;
+            background: 
+                linear-gradient(to bottom, #8b4513 0%, #5a2900 30%, #8b4513 70%, #5a2900 100%),
+                url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%235a2900' fill-opacity='0.4'%3E%3Cpath d='M0 0h3v3H0V0zm3 3h3v3H3V3z'/%3E%3C/g%3E%3C/svg%3E");
+            border: 2px solid #5a2900;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            z-index: 5;
+        }
+        
+        .cannon {
+            background: 
+                linear-gradient(to bottom, #8b4513 0%, #5a2900 100%),
+                url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%235a2900' fill-opacity='0.4'%3E%3Cpath d='M0 0h3v3H0V0zm3 3h3v3H3V3z'/%3E%3C/g%3E%3C/svg%3E");
+            border: 3px solid #5a2900;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+            position: relative;
+        }
+        
+        .cannon::after {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(to bottom, #8b4513 0%, #5a2900 100%);
+            border: 3px solid #5a2900;
+            border-radius: 50%;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7);
+        }
+        
+        .cannon::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -15px;
+            width: 15px;
+            height: 8px;
+            background: #5a2900;
+            border-radius: 2px;
+            transform: translateY(-50%);
+        }
+        
+        .ball {
+            background: 
+                radial-gradient(circle, #ffffff 0%, #aaaaaa 70%),
+                url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='1' fill='%23000' fill-opacity='0.1'/%3E%3C/svg%3E");
+            border: 2px solid #888;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #fff, 0 0 12px rgba(255, 0, 81, 0.5);
+            position: relative;
+        }
+        
+        .ball::before {
+            content: '';
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            width: 15%;
+            height: 15%;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+        }
+        
+        .ball-used {
+            opacity: 0.3;
+        }
+        
+        .spooky-text {
+            font-family: 'Eater', cursive;
+            text-shadow: 2px 2px 0 #8a2be2, 4px 4px 0 #000, 0 0 10px #ff0051;
+            letter-spacing: 2px;
+            position: relative;
+        }
+        
+        .spooky-text::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #ff0051, transparent);
+            box-shadow: 0 0 10px #ff0051;
+        }
+        
+        .game-over, .level-complete {
+            background: 
+                rgba(0, 0, 0, 0.9),
+                url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ff0051' fill-opacity='0.1'%3E%3Cpath d='M0 0h20v20H0V0zm1 1v18h18V1H1z'/%3E%3C/g%3E%3C/svg%3E");
+            border: 4px solid #ff0051;
+            box-shadow: 0 0 30px #ff0051, inset 0 0 20px rgba(255, 0, 81, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-over::before, .level-complete::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 0, 0, 0.1) 0%, transparent 15%),
+                radial-gradient(circle at 80% 70%, rgba(138, 43, 226, 0.1) 0%, transparent 15%);
+            pointer-events: none;
+        }
+        
+        button {
+            background: #ff0051;
+            color: #fff;
+            border: 2px solid #8a2be2;
+            box-shadow: 0 0 10px #ff0051;
+            transition: all 0.2s;
+        }
+        
+        button:hover {
+            background: #8a2be2;
+            box-shadow: 0 0 15px #8a2be2;
+            transform: translateY(-2px);
+        }
+        
+        .hit-effect {
+            animation: hit 0.6s ease-out forwards;
+        }
+        
+        @keyframes hit {
+            0% { 
+                transform: scale(1); 
+                opacity: 1; 
+                filter: brightness(1) blur(0px);
+                box-shadow: 0 0 15px #ff0000, inset 0 0 12px #ff5e00;
+            }
+            20% { 
+                transform: scale(1.3); 
+                opacity: 0.9; 
+                filter: brightness(3) blur(1px) hue-rotate(0deg);
+                box-shadow: 0 0 25px #ff5e00, inset 0 0 20px #ffaa00;
+            }
+            40% { 
+                transform: scale(2.5); 
+                opacity: 0.8; 
+                filter: brightness(8) blur(2px) hue-rotate(45deg);
+                box-shadow: 0 0 35px #ffff00, 0 0 50px #ff5e00, inset 0 0 25px #ffff00;
+            }
+            60% { 
+                transform: scale(3.5); 
+                opacity: 0.6; 
+                filter: brightness(12) blur(3px) hue-rotate(90deg);
+                box-shadow: 0 0 45px #ffffff, 0 0 70px #ff5e00, 0 0 90px #ff0000;
+            }
+            80% { 
+                transform: scale(4); 
+                opacity: 0.3; 
+                filter: brightness(15) blur(4px) hue-rotate(135deg);
+                box-shadow: 0 0 55px #ffffff, 0 0 90px #ff5e00, 0 0 120px #ff0000;
+            }
+            100% { 
+                transform: scale(5); 
+                opacity: 0; 
+                filter: brightness(20) blur(5px) hue-rotate(180deg);
+                box-shadow: 0 0 65px #ffffff, 0 0 110px #ff5e00, 0 0 150px #ff0000;
+            }
+        }
+        
+        .spark {
+            position: absolute;
+            background: radial-gradient(circle, #ffff00 0%, #ff5e00 70%, transparent 90%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 30;
+            animation: spark 0.8s ease-out forwards;
+        }
+        
+        @keyframes spark {
+            0% {
+                transform: scale(0);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+        
+        .explosion {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 25;
+            background: radial-gradient(circle, #ffff00 0%, #ff5e00 30%, #ff0000 60%, transparent 80%);
+            animation: explosion 0.6s ease-out forwards;
+        }
+        
+        @keyframes explosion {
+            0% {
+                transform: scale(0);
+                opacity: 0.8;
+                filter: blur(0px);
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+                filter: blur(2px);
+            }
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+                filter: blur(5px);
+            }
+        }
+        
+        .shoot-effect {
+            animation: shoot 0.3s ease-out;
+        }
+        
+        @keyframes shoot {
+            0% { transform: scale(1.8); filter: brightness(2); }
+            70% { transform: scale(0.9); filter: brightness(1.5); }
+            100% { transform: scale(1); filter: brightness(1); }
+        }
+        
+        @keyframes spooky-glitch {
+            0% { transform: translate(0); filter: hue-rotate(0deg); }
+            20% { transform: translate(-2px, 2px) skew(-2deg, 1deg); filter: hue-rotate(10deg); }
+            40% { transform: translate(-2px, -2px) skew(1deg, -2deg); filter: hue-rotate(-10deg); }
+            60% { transform: translate(2px, 2px) skew(2deg, -1deg); filter: hue-rotate(5deg); }
+            80% { transform: translate(2px, -2px) skew(-1deg, 2deg); filter: hue-rotate(-5deg); }
+            100% { transform: translate(0); filter: hue-rotate(0deg); }
+        }
+        
+        .glitch {
+            animation: spooky-glitch 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+    <h1 class="spooky-text text-5xl md:text-7xl mb-3 text-center glitch" style="animation-duration: 5s;">HAUNTED CARNIVAL</h1>
+    <h2 class="text-xl md:text-2xl mb-6 text-[#8a2be2] text-center font-bold tracking-wider glitch" style="animation-duration: 7s; animation-delay: 1s;">SHOOT THE MOVING TARGETS!</h2>
+    
+    <div class="w-full max-w-4xl flex flex-col md:flex-row justify-between items-center mb-4">
+        <div class="text-xl mb-2 md:mb-0">
+            Level: <span id="level" class="text-[#ff0051] font-bold">1</span>
+        </div>
+        <div class="text-xl">
+            Score: <span id="score" class="text-[#ff0051] font-bold">0</span>
+        </div>
+    </div>
+    
+    <div class="relative w-full max-w-4xl h-96 mb-4 scene rounded-lg" id="scene">
+        <!-- Targets will be generated here -->
+    </div>
+    
+    <div class="flex justify-between w-full max-w-4xl mb-6">
+        <div class="cannon w-16 h-16 rounded-full" id="cannon"></div>
+        <div class="flex space-x-2">
+            <div class="ball w-8 h-8" id="ball1"></div>
+            <div class="ball w-8 h-8" id="ball2"></div>
+            <div class="ball w-8 h-8" id="ball3"></div>
+            <div class="ball w-8 h-8" id="ball4"></div>
+            <div class="ball w-8 h-8" id="ball5"></div>
+            <div class="ball w-8 h-8" id="ball6"></div>
+            <div class="ball w-8 h-8" id="ball7"></div>
+            <div class="ball w-8 h-8" id="ball8"></div>
+            <div class="ball w-8 h-8" id="ball9"></div>
+            <div class="ball w-8 h-8" id="ball10"></div>
+        </div>
+    </div>
+    
+    <div class="mt-4 text-center text-lg">
+        <p class="mb-2 text-[#ff5e00] font-bold glitch" style="animation-duration: 8s; animation-delay: 2s;">AIM WITH YOUR MOUSE AND CLICK TO SHOOT!</p>
+        <p class="text-[#8a2be2] font-bold glitch mb-4" style="animation-duration: 9s; animation-delay: 3s;">HIT ALL TARGETS BEFORE RUNNING OUT OF AMMO!</p>
+    </div>
+    
+    <div class="instructions hidden md:block">
+        <h3 class="spooky-text">HOW TO PLAY</h3>
+        <p>• Click to shoot at the moving targets</p>
+        <p>• Hit all targets to advance to the next level</p>
+        <p>• Press SPACE to shoot from cannon position</p>
+        <p>• Press R to restart the game</p>
+        <p>• Consecutive hits build your combo multiplier</p>
+    </div>
+    
+    <!-- Game Over Modal -->
+    <div class="fixed inset-0 flex items-center justify-center hidden z-50" id="gameOverModal">
+        <div class="absolute inset-0 bg-black bg-opacity-80"></div>
+        <div class="game-over p-8 rounded-lg text-center max-w-md z-10">
+            <h2 class="spooky-text text-4xl mb-4 glitch">GAME OVER</h2>
+            <p class="text-xl mb-4 text-[#ff5e00]">YOU RAN OUT OF AMMO!</p>
+            <p class="mb-6 text-[#8a2be2]">FINAL SCORE: <span id="finalScore" class="text-[#ff0051] font-bold text-2xl">0</span></p>
+            <button class="px-8 py-3 text-lg rounded font-bold" onclick="restartGame()">TRY AGAIN</button>
+        </div>
+    </div>
+    
+    <!-- Level Complete Modal -->
+    <div class="fixed inset-0 flex items-center justify-center hidden z-50" id="levelCompleteModal">
+        <div class="absolute inset-0 bg-black bg-opacity-80"></div>
+        <div class="level-complete p-8 rounded-lg text-center max-w-md z-10">
+            <h2 class="spooky-text text-4xl mb-4">LEVEL COMPLETE!</h2>
+            <p class="text-xl mb-6 text-[#ff5e00]">YOU HIT ALL THE TARGETS!</p>
+            <button class="px-8 py-3 text-lg rounded font-bold" onclick="nextLevel()">NEXT LEVEL</button>
+        </div>
+    </div>
+
+    <script>
+        // Game variables
+        let currentLevel = 1;
+        let score = 0;
+        let ballsRemaining = 10;
+        let targets = [];
+        let targetsHit = 0;
+        let animationFrameId;
+        let gameActive = true;
+        let comboMultiplier = 1;
+        let comboTimeout;
+        let consecutiveHits = 0;
+        
+        // DOM elements
+        const scene = document.getElementById('scene');
+        const cannon = document.getElementById('cannon');
+        const levelElement = document.getElementById('level');
+        const scoreElement = document.getElementById('score');
+        const gameOverModal = document.getElementById('gameOverModal');
+        const levelCompleteModal = document.getElementById('levelCompleteModal');
+        const finalScoreElement = document.getElementById('finalScore');
+        
+        // Sound effects
+        const shootSound = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAAABMYXZmNTguODkuMTAwAAAAAAAAAAAAAABQAWgBAAABAAABAAAAAAAAAAEAAAAAAA8AAABMSVNUUwAAAAwAAAADBAAAAAYAAABNQUlEAAAADgAAAAIAAAAKAAAAU09TRAAAABgAAAACAAAABAAAAFRQRTEAAAAcAAAAAgAAAAoAAABWSUVGAAAAMAAAAAIAAAAEAAAAQ09NTgAAABwAAAACAAAABgAAAFWQTEUAAAAwAAAAAgAAAAQAAABDb3B5cmlnaHQgKGMpIDE5OTggQXBwbGUgQ29tcHV0ZXIgSW5jLgAAAFRQRTEAAAAsAAAAAgAAAAwAAABWSUVGAAAAMAAAAAIAAAAEAAAAQ09NTgAAABwAAAACAAAABgAAAFdBVEUAAAAkAAAAAgAAAAQAAABWQVNJAAAAGAAAAAIAAAAEAAAAVk9SQwAAABAAAAACAAAAAQAAAA==");
+        const hitSound = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAAABMYXZmNTguODkuMTAwAAAAAAAAAAAAAABQAWgBAAABAAABAAAAAAAAAAEAAAAAAA8AAABMSVNUUwAAAAwAAAADBAAAAAYAAABNQUlEAAAADgAAAAIAAAAKAAAAU09TRAAAABgAAAACAAAABAAAAFRQRTEAAAAcAAAAAgAAAAoAAABWSUVGAAAAMAAAAAIAAAAEAAAAQ09NTgAAABwAAAACAAAABgAAAFWQTEUAAAAwAAAAAgAAAAQAAABDb3B5cmlnaHQgKGMpIDE5OTggQXBwbGUgQ29tcHV0ZXIgSW5jLgAAAFRQRTEAAAAsAAAAAgAAAAwAAABWSUVGAAAAMAAAAAIAAAAEAAAAQ09NTgAAABwAAAACAAAABgAAAFdBVEUAAAAkAAAAAgAAAAQAAABWQVNJAAAAGAAAAAIAAAAEAAAAVk9SQwAAABAAAAACAAAAAQAAAA==");
+        const levelUpSound = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAAABMYXZmNTguODkuMTAwAAAAAAAAAAAAAABQAWgBAAABAAABAAAAAAAAAAEAAAAAAA8AAABMSVNUUwAAAAwAAAADBAAAAAYAAABNQUlEAAAADgAAAAIAAAAKAAAAU09TRAAAABgAAAACAAAABAAAAFRQRTEAAAAcAAAAAgAAAAoAAABWSUVGAAAAMAAAAAIAAAAEAAAAQ09NTgAAABwAAAACAAAABgAAAFWQTEUAAAAwAAAAAgAAAAQAAABDb3B5cmlnaHQgKGMpIDE5OTggQXBwbGUgQ29tcHV0ZXIgSW5jLgAAAFRQRTEAAAAsAAAAAgAAAAwAAABWSUVGAAAAMAAAAAIAAAAEAAAAQ09NTgAAABwAAAACAAAABgAAAFdBVEUAAAAkAAAAAgAAAAQAAABWQVNJAAAAGAAAAAIAAAAEAAAAVk9SQwAAABAAAAACAAAAAQAAAA==");
+        const gameOverSound = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAAABMYXZmNTguODkuMTAwAAAAAAAAAAAAAABQAWgBAAABAAABAAAAAAAAAAEAAAAAAA8AAABMSVNUUwAAAAwAAAADBAAAAAYAAABNQUlEAAAADgAAAAIAAAAKAAAAU09TRAAAABgAAAACAAAABAAAAFRQRTEAAAAcAAAAAgAAAAoAAABWSUVGAAAAMAAAAAIAAAAEAAAAQ09NTgAAABwAAAACAAAABgAAAFWQTEUAAAAwAAAAAgAAAAQAAABDb3B5cmlnaHQgKGMpIDE5OTggQXBwbGUgQ29tcHV0ZXIgSW5jLgAAAFRQRTEAAAAsAAAAAgAAAAwAAABWSUVGAAAAMAAAAAIAAAAEAAAAQ09NTgAAABwAAAACAAAABgAAAFdBVEUAAAAkAAAAAgAAAAQAAABWQVNJAAAAGAAAAAIAAAAEAAAAVk9SQwAAABAAAAACAAAAAQAAAA==");
+        
+        // Set volume for sounds
+        [shootSound, hitSound, levelUpSound, gameOverSound].forEach(sound => {
+            sound.volume = 0.3;
+            sound.preload = 'auto';
+        });
+        
+        // Initialize the game
+        function initGame() {
+            resetGameState();
+            createTargets();
+            updateUI();
+            setupEventListeners();
+            startGameLoop();
+        }
+        
+        // Reset game state for a new level
+        function resetGameState() {
+            targets = [];
+            targetsHit = 0;
+            ballsRemaining = 10;
+            gameActive = true;
+            comboMultiplier = 1;
+            consecutiveHits = 0;
+            clearTimeout(comboTimeout);
+            updateBallsUI();
+            
+            // Clear the scene except for the cannon
+            while (scene.firstChild) {
+                scene.removeChild(scene.firstChild);
+            }
+        }
+        
+        // Create the moving targets with varying patterns
+        function createTargets() {
+            const baseSpeed = 2 + (currentLevel * 0.5);
+            const sceneWidth = scene.offsetWidth;
+            const sceneHeight = scene.offsetHeight;
+            const targetSize = Math.max(20, 40 - (currentLevel * 2)); // Minimum size of 20px
+            
+            // Calculate number of targets (add one every 2 levels, max 6)
+            const baseTargets = 3;
+            const additionalTargets = Math.min(3, Math.floor((currentLevel - 1) / 2));
+            const totalTargets = baseTargets + additionalTargets;
+            
+            for (let i = 0; i < totalTargets; i++) {
+                const yPosition = (i + 1) * (sceneHeight / (totalTargets + 1));
+                
+                // Create target bar
+                const targetBar = document.createElement('div');
+                targetBar.className = 'target-bar';
+                targetBar.style.width = `${sceneWidth - 40}px`;
+                targetBar.style.left = '20px';
+                targetBar.style.top = `${yPosition - 3}px`;
+                
+                // Create target stand
+                const targetStand = document.createElement('div');
+                targetStand.className = 'target-stand';
+                targetStand.style.left = `${sceneWidth / 2 - 4}px`;
+                targetStand.style.top = `${yPosition + 3}px`;
+                
+                // Create target
+                const target = document.createElement('div');
+                target.className = 'target absolute';
+                target.style.width = `${targetSize}px`;
+                target.style.height = `${targetSize}px`;
+                target.style.top = `${yPosition - targetSize/2}px`;
+                
+                // Random starting position
+                const startPos = Math.random() * (sceneWidth - targetSize);
+                target.style.left = `${startPos}px`;
+                
+                // Different movement patterns based on level
+                let speed, pattern;
+                if (currentLevel <= 3) {
+                    // Basic horizontal movement
+                    speed = baseSpeed * (Math.random() > 0.5 ? 1 : -1);
+                    pattern = 'horizontal';
+                } else if (currentLevel <= 6) {
+                    // Faster horizontal with occasional pauses
+                    speed = baseSpeed * 1.5 * (Math.random() > 0.5 ? 1 : -1);
+                    pattern = 'pausing';
+                } else {
+                    // Advanced movement patterns
+                    const patterns = ['horizontal', 'sinusoidal', 'zigzag'];
+                    pattern = patterns[Math.floor(Math.random() * patterns.length)];
+                    speed = baseSpeed * 2 * (Math.random() > 0.5 ? 1 : -1);
+                }
+                
+                // Store target data
+                const targetData = {
+                    element: target,
+                    bar: targetBar,
+                    stand: targetStand,
+                    speed: speed,
+                    pattern: pattern,
+                    isHit: false,
+                    pauseCounter: 0,
+                    oscillation: 0,
+                    direction: 1
+                };
+                
+                targets.push(targetData);
+                scene.appendChild(targetBar);
+                scene.appendChild(targetStand);
+                scene.appendChild(target);
+            }
+        }
+        
+        // Update the UI with current game state
+        function updateUI() {
+            levelElement.textContent = currentLevel;
+            scoreElement.textContent = score;
+            updateBallsUI();
+        }
+        
+        // Update the balls UI to show remaining balls
+        function updateBallsUI() {
+            for (let i = 1; i <= 10; i++) {
+                const ball = document.getElementById(`ball${i}`);
+                if (i > ballsRemaining) {
+                    ball.classList.add('ball-used');
+                } else {
+                    ball.classList.remove('ball-used');
+                }
+            }
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            scene.addEventListener('click', handleShoot);
+            // Add keyboard controls
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && gameActive) {
+                    // Simulate click at cannon position
+                    const cannonRect = cannon.getBoundingClientRect();
+                    const sceneRect = scene.getBoundingClientRect();
+                    const clickEvent = new MouseEvent('click', {
+                        clientX: cannonRect.left + cannonRect.width / 2,
+                        clientY: cannonRect.top + cannonRect.height / 2
+                    });
+                    scene.dispatchEvent(clickEvent);
+                } else if (e.code === 'KeyR') {
+                    restartGame();
+                }
+            });
+        }
+        
+        // Handle shooting logic
+        function handleShoot(e) {
+            if (!gameActive || ballsRemaining <= 0) return;
+            
+            ballsRemaining--;
+            updateBallsUI();
+            
+            // Play shoot sound
+            shootSound.currentTime = 0;
+            shootSound.play().catch(() => {}); // Ignore errors if autoplay is blocked
+            
+            // Create shooting effect
+            cannon.classList.add('shoot-effect');
+            setTimeout(() => {
+                cannon.classList.remove('shoot-effect');
+            }, 200);
+            
+            // Create muzzle flash effect
+            const muzzleFlash = document.createElement('div');
+            muzzleFlash.style.position = 'absolute';
+            muzzleFlash.style.width = '20px';
+            muzzleFlash.style.height = '10px';
+            muzzleFlash.style.background = 'radial-gradient(circle, #ffff00 0%, #ff5e00 70%, transparent 90%)';
+            muzzleFlash.style.borderRadius = '50%';
+            muzzleFlash.style.left = '-15px';
+            muzzleFlash.style.top = '50%';
+            muzzleFlash.style.transform = 'translateY(-50%)';
+            muzzleFlash.style.zIndex = '15';
+            cannon.appendChild(muzzleFlash);
+            
+            setTimeout(() => {
+                cannon.removeChild(muzzleFlash);
+            }, 100);
+            
+            // Check if any target was hit
+            const rect = scene.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            let hit = false;
+            
+            targets.forEach(target => {
+                if (target.isHit) return;
+                
+                const targetRect = target.element.getBoundingClientRect();
+                const targetX = targetRect.left - rect.left + targetRect.width / 2;
+                const targetY = targetRect.top - rect.top + targetRect.height / 2;
+                
+                // Calculate distance between click and target center
+                const distance = Math.sqrt(Math.pow(x - targetX, 2) + Math.pow(y - targetY, 2));
+                
+                if (distance < targetRect.width / 2) {
+                    // Target hit!
+                    hit = true;
+                    consecutiveHits++;
+                    clearTimeout(comboTimeout);
+                    
+                    // Set combo multiplier based on consecutive hits
+                    if (consecutiveHits >= 3) {
+                        comboMultiplier = Math.min(5, Math.floor(consecutiveHits / 3) + 1);
+                        
+                        // Show combo text
+                        const comboText = document.createElement('div');
+                        comboText.textContent = `COMBO x${comboMultiplier}!`;
+                        comboText.style.position = 'absolute';
+                        comboText.style.left = `${targetX}px`;
+                        comboText.style.top = `${targetY - 30}px`;
+                        comboText.style.color = '#ff5e00';
+                        comboText.style.fontWeight = 'bold';
+                        comboText.style.fontSize = '20px';
+                        comboText.style.textShadow = '0 0 5px #ff0000';
+                        comboText.style.zIndex = '100';
+                        comboText.style.animation = 'fadeUp 1s forwards';
+                        scene.appendChild(comboText);
+                        
+                        setTimeout(() => {
+                            scene.removeChild(comboText);
+                        }, 1000);
+                    }
+                    
+                    comboTimeout = setTimeout(() => {
+                        consecutiveHits = 0;
+                        comboMultiplier = 1;
+                    }, 2000);
+                    
+                    target.isHit = true;
+                    targetsHit++;
+                    
+                    // Play hit sound
+                    hitSound.currentTime = 0;
+                    hitSound.play().catch(() => {});
+                    
+                    // Get target position for effects
+                    const targetX = targetRect.left - rect.left + targetRect.width / 2;
+                    const targetY = targetRect.top - rect.top + targetRect.height / 2;
+                    
+                    // Add hit effect to target
+                    target.element.classList.add('hit-effect');
+                    
+                    // Create explosion effect
+                    const explosion = document.createElement('div');
+                    explosion.className = 'explosion';
+                    explosion.style.width = `${targetRect.width * 2}px`;
+                    explosion.style.height = `${targetRect.height * 2}px`;
+                    explosion.style.left = `${targetX - targetRect.width}px`;
+                    explosion.style.top = `${targetY - targetRect.height}px`;
+                    scene.appendChild(explosion);
+                    
+                    // Create multiple spark particles
+                    for (let i = 0; i < 12; i++) {
+                        setTimeout(() => {
+                            const spark = document.createElement('div');
+                            spark.className = 'spark';
+                            const size = 10 + Math.random() * 20;
+                            spark.style.width = `${size}px`;
+                            spark.style.height = `${size}px`;
+                            spark.style.left = `${targetX - size/2}px`;
+                            spark.style.top = `${targetY - size/2}px`;
+                            
+                            // Random direction for sparks
+                            const angle = Math.random() * Math.PI * 2;
+                            const distance = 30 + Math.random() * 50;
+                            spark.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+                            
+                            scene.appendChild(spark);
+                            
+                            // Remove spark after animation
+                            setTimeout(() => {
+                                if (spark.parentNode) {
+                                    scene.removeChild(spark);
+                                }
+                            }, 800);
+                        }, i * 50);
+                    }
+                    
+                    // Remove target and effects after animation
+                    setTimeout(() => {
+                        scene.removeChild(target.element);
+                        scene.removeChild(target.bar);
+                        scene.removeChild(target.stand);
+                        if (explosion.parentNode) {
+                            scene.removeChild(explosion);
+                        }
+                    }, 600);
+                    
+                    // Update score with combo multiplier
+                    const pointsEarned = 100 * currentLevel * comboMultiplier;
+                    score += pointsEarned;
+                    scoreElement.textContent = score;
+                    
+                    // Show points popup
+                    const pointsPopup = document.createElement('div');
+                    pointsPopup.textContent = `+${pointsEarned}`;
+                    pointsPopup.style.position = 'absolute';
+                    pointsPopup.style.left = `${targetX}px`;
+                    pointsPopup.style.top = `${targetY}px`;
+                    pointsPopup.style.color = '#ff5e00';
+                    pointsPopup.style.fontWeight = 'bold';
+                    pointsPopup.style.fontSize = '18px';
+                    pointsPopup.style.textShadow = '0 0 5px #ff0000';
+                    pointsPopup.style.zIndex = '100';
+                    pointsPopup.style.animation = 'fadeUp 1s forwards';
+                    scene.appendChild(pointsPopup);
+                    
+                    setTimeout(() => {
+                        scene.removeChild(pointsPopup);
+                    }, 1000);
+                    
+                    // Check if all targets are hit
+                    if (targetsHit >= targets.length) {
+                        levelComplete();
+                    }
+                }
+            });
+            
+            // Check if game is over (no balls left and targets remain)
+            if (ballsRemaining <= 0 && targetsHit < targets.length) {
+                setTimeout(() => {
+                    gameOver();
+                }, 500);
+            }
+        }
+        
+        // Game loop to move targets
+        function startGameLoop() {
+            cancelAnimationFrame(animationFrameId);
+            
+            function gameLoop() {
+                if (gameActive) {
+                    moveTargets();
+                    animationFrameId = requestAnimationFrame(gameLoop);
+                }
+            }
+            
+            animationFrameId = requestAnimationFrame(gameLoop);
+        }
+        
+        // Move targets based on their pattern
+        function moveTargets() {
+            const sceneWidth = scene.offsetWidth;
+            const sceneHeight = scene.offsetHeight;
+            
+            targets.forEach(target => {
+                if (target.isHit) return;
+                
+                const targetElem = target.element;
+                const currentLeft = parseFloat(targetElem.style.left);
+                const currentTop = parseFloat(targetElem.style.top);
+                const targetWidth = targetElem.offsetWidth;
+                const targetHeight = targetElem.offsetHeight;
+                
+                let newLeft = currentLeft;
+                let newTop = currentTop;
+                
+                // Different movement patterns
+                switch(target.pattern) {
+                    case 'horizontal':
+                        newLeft = currentLeft + target.speed;
+                        break;
+                        
+                    case 'pausing':
+                        if (target.pauseCounter > 0) {
+                            target.pauseCounter--;
+                        } else {
+                            newLeft = currentLeft + target.speed;
+                            
+                            // Random chance to pause
+                            if (Math.random() < 0.005) {
+                                target.pauseCounter = 60; // ~1 second pause
+                            }
+                        }
+                        break;
+                        
+                    case 'sinusoidal':
+                        target.oscillation += 0.05;
+                        newLeft = currentLeft + target.speed;
+                        newTop = currentTop + Math.sin(target.oscillation) * 2;
+                        break;
+                        
+                    case 'zigzag':
+                        newLeft = currentLeft + target.speed;
+                        
+                        // Change vertical direction at edges
+                        if (newLeft <= 20 || newLeft + targetWidth >= sceneWidth - 20) {
+                            target.direction *= -1;
+                        }
+                        
+                        newTop = currentTop + target.direction;
+                        break;
+                }
+                
+                // Boundary checks for horizontal movement
+                if (newLeft <= 20) {
+                    newLeft = 20;
+                    target.speed = Math.abs(target.speed);
+                } else if (newLeft + targetWidth >= sceneWidth - 20) {
+                    newLeft = sceneWidth - targetWidth - 20;
+                    target.speed = -Math.abs(target.speed);
+                }
+                
+                // Boundary checks for vertical movement
+                const barTop = parseFloat(target.bar.style.top) + 3;
+                const minTop = barTop - targetHeight/2;
+                const maxTop = barTop + 20;
+                
+                if (newTop < minTop) {
+                    newTop = minTop;
+                    target.direction *= -1;
+                } else if (newTop > maxTop) {
+                    newTop = maxTop;
+                    target.direction *= -1;
+                }
+                
+                targetElem.style.left = `${newLeft}px`;
+                targetElem.style.top = `${newTop}px`;
+            });
+        }
+        
+        // Handle level completion
+        function levelComplete() {
+            gameActive = false;
+            cancelAnimationFrame(animationFrameId);
+            
+            // Play level up sound
+            levelUpSound.currentTime = 0;
+            levelUpSound.play().catch(() => {});
+            
+            setTimeout(() => {
+                levelCompleteModal.classList.remove('hidden');
+            }, 1000);
+        }
+        
+        // Handle game over
+        function gameOver() {
+            gameActive = false;
+            cancelAnimationFrame(animationFrameId);
+            
+            // Play game over sound
+            gameOverSound.currentTime = 0;
+            gameOverSound.play().catch(() => {});
+            
+            finalScoreElement.textContent = score;
+            gameOverModal.classList.remove('hidden');
+        }
+        
+        // Move to next level
+        function nextLevel() {
+            currentLevel++;
+            levelCompleteModal.classList.add('hidden');
+            initGame();
+        }
+        
+        // Restart the game
+        function restartGame() {
+            currentLevel = 1;
+            score = 0;
+            gameOverModal.classList.add('hidden');
+            levelCompleteModal.classList.add('hidden');
+            initGame();
+        }
+        
+        // Initialize the game when the page loads
+        window.onload = initGame;
+        
+        // Add fadeUp animation for points and combo text
+        document.head.insertAdjacentHTML('beforeend', '<style>@keyframes fadeUp {0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-30px); }}</style>');
+    </script>
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=44444t/haunted-carnival" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+</html>

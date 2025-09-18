@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinister Circus Tarot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:wght@400;700&display=swap');
+        
+        :root {
+            --dark-bg: #0f0e15;
+            --accent: #ff3864;
+            --gold: #d4af37;
+            --purple: #6d3bbf;
+        }
+        
+        /* CRT Monitor Effect */
+        .crt-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            box-shadow: inset 0 0 10rem rgba(0, 0, 0, 0.5);
+            animation: scanline 8s linear infinite;
+        }
+        
+        .crt-effect:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(0, 0, 0, 0.2) 100%
+            );
+            pointer-events: none;
+        }
+        
+        .crt-effect:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(16, 12, 42, 0.1);
+            pointer-events: none;
+            animation: flicker 0.15s infinite;
+        }
+        
+        @keyframes scanline {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 0 100%;
+            }
+        }
+        
+        @keyframes flicker {
+            0% { opacity: 0.1; }
+            5% { opacity: 0.1; }
+            6% { opacity: 0.8; }
+            7% { opacity: 0.1; }
+            8% { opacity: 0.9; }
+            9% { opacity: 0.1; }
+            10% { opacity: 1; }
+            20% { opacity: 0.3; }
+            40% { opacity: 1; }
+            50% { opacity: 0.7; }
+            70% { opacity: 0.8; }
+            80% { opacity: 0.4; }
+            100% { opacity: 0.8; }
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Enhanced Starry background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background: linear-gradient(to bottom, #000000 0%, #0a0515 40%, #160b2d 100%);
+            overflow: hidden;
+        }
+        
+        /* Vignette effect */
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.9);
+            opacity: 0.6;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+        
+        .star.small {
+            width: 1px;
+            height: 1px;
+        }
+        
+        .star.medium {
+            width: 2px;
+            height: 2px;
+        }
+        
+        .star.large {
+            width: 3px;
+            height: 3px;
+            box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        /* Shooting stars */
+        .shooting-star {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 20%, rgba(255,255,255,0) 100%);
+            transform-origin: left center;
+            animation: shooting 2s ease-out forwards;
+            opacity: 0;
+        }
+        
+        @keyframes shooting {
+            0% {
+                transform: translateX(0) translateY(0) rotate(0deg) scaleX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100vw) translateY(50vh) rotate(45deg) scaleX(1);
+                opacity: 0;
+            }
+        }
+        
+        .shooting-star:after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+        }
+        
+        .circus-font {
+            font-family: 'Cinzel', serif;
+        }
+        
+        .card {
+            transition: transform 0.5s ease;
+            transform-style: preserve-3d;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .card-face {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card-front {
+            background: linear-gradient(145deg, #2c1b47, #1a102c);
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card-back {
+            background: linear-gradient(145deg, #1a102c, #0f0a1a);
+            transform: rotateY(180deg);
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 0 20px rgba(109, 59, 191, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(109, 59, 191, 0.8);
+        }
+        
+        .flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .tarot-back {
+            background: radial-gradient(circle, #3a2257 0%, #1e1135 100%);
+            border: 2px solid var(--gold);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at center, #d4af37 2px, transparent 2px),
+                radial-gradient(circle at center, #d4af37 1px, transparent 1px);
+            background-size: 30px 30px, 10px 10px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3), inset 0 0 15px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tarot-back:before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle, transparent 40%, rgba(109, 59, 191, 0.2) 90%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .crystal-ball {
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(183, 82, 231, 0.2) 40%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(8px);
+            animation: glow 4s infinite alternate;
+        }
+        
+        @keyframes glow {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .fortune-text {
+            background: rgba(0, 0, 0, 0.8);
+            border-left: 3px solid var(--accent);
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(255, 56, 100, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fortune-text:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 0%, rgba(255, 56, 100, 0.1) 50%, transparent 100%);
+            animation: shimmer 3s infinite linear;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .menu-item {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .menu-item:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 56, 100, 0.3), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .menu-item:hover:before {
+            left: 100%;
+        }
+        
+        .card-enter {
+            animation: cardAppear 0.8s ease-out forwards;
+        }
+        
+        @keyframes cardAppear {
+            0% { 
+                opacity: 0;
+            }
+            100% { 
+                opacity: 1;
+            }
+        }
+        
+        .fortune-reveal {
+            animation: fortuneReveal 1.5s ease-out forwards;
+        }
+        
+        @keyframes fortuneReveal {
+            0% { 
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% { 
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1a102c;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff6b8b;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Starry Background -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- Vignette Effect -->
+    <div class="vignette"></div>
+    
+    <!-- CRT Monitor Effect -->
+    <div class="crt-effect"></div>
+    
+    <!-- Game Container -->
+    <div id="game-container" class="min-h-screen py-12 px-4 md:px-8 max-w-6xl mx-auto w-full relative">
+        <!-- Subtle fog effect -->
+        <div class="absolute inset-0 pointer-events-none opacity-30">
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-[#0f0e15]"></div>
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent to-[#0f0e15]"></div>
+        </div>
+        
+        <!-- Header -->
+        <header class="flex justify-between items-center mb-12 relative z-10">
+            <h1 class="text-2xl md:text-3xl circus-font text-[var(--accent)] drop-shadow-[0_0_5px_rgba(255,56,100,0.7)]">Sinister Circus Tarot</h1>
+            <button id="reset-btn" class="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-[var(--accent)] transition-colors border border-gray-700 hover:border-[var(--accent)]">
+                <i class="fas fa-redo mr-2"></i>Reset
+            </button>
+        </header>
+
+        <!-- Meditation Focus Timer -->
+        <div id="meditation-timer" class="mb-8 text-center relative z-10">
+            <h2 class="text-xl mb-4 text-gray-300">Focus your energy on your question</h2>
+            <div class="flex items-center justify-center">
+                <div class="relative w-16 h-16 mr-4">
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="#2d3748" stroke-width="8" />
+                        <circle id="timer-circle" cx="50" cy="50" r="45" fill="none" stroke="#ff3864" stroke-width="8" 
+                                stroke-dasharray="283" stroke-dashoffset="283" />
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <span id="timer-count" class="text-white text-sm">5</span>
+                    </div>
+                </div>
+                <button id="start-meditation" class="px-6 py-2 bg-[var(--purple)] text-white rounded-lg hover:bg-purple-800 transition-colors border border-purple-600 hover:border-purple-400">
+                    Begin Focus
+                </button>
+            </div>
+        </div>
+
+        <!-- Card Selection Area -->
+        <div id="card-selection" class="mb-12 text-center relative z-10">
+            <h2 class="text-2xl mb-6 text-gray-300 drop-shadow-[0_0_3px_rgba(255,255,255,0.3)]">Focus on your question and select three cards</h2>
+            
+            <!-- Spread Selection -->
+            <div class="mb-8">
+                <h3 class="text-lg mb-3 text-[var(--gold)]">Choose a spread:</h3>
+                <div class="flex justify-center space-x-4">
+                    <button data-spread="past-present-future" class="spread-btn px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-[var(--purple)] transition-colors border border-gray-700">Past-Present-Future</button>
+                    <button data-spread="situation-action-outcome" class="spread-btn px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-[var(--purple)] transition-colors border border-gray-700">Situation-Action-Outcome</button>
+                    <button data-spread="mind-body-spirit" class="spread-btn px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-[var(--purple)] transition-colors border border-gray-700">Mind-Body-Spirit</button>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-6 md:gap-10" style="min-height: 280px;">
+                <!-- Three card slots -->
+                <div class="w-32 h-56 md:w-40 md:h-64 relative cursor-pointer card" data-card-index="0" data-card-position="">
+                    <div class="card-face card-front tarot-back">
+                        <div class="w-16 h-16 rounded-full crystal-ball"></div>
+                    </div>
+                    <div class="card-face card-back flex flex-col justify-between p-4">
+                        <div class="relative">
+                            <div class="text-lg font-semibold circus-font" id="card-name-0">The Fool</div>
+                            <div id="reversal-indicator-0" class="absolute -top-2 -right-2 w-4 h-4 bg-[var(--accent)] rounded-full hidden" title="Reversed"></div>
+                        </div>
+                        <div class="text-sm" id="card-desc-0">Beginning of a journey</div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs italic" id="card-type-0">Major Arcana</span>
+                            <span id="element-indicator-0" class="text-xs px-2 py-1 rounded-full bg-opacity-20 hidden"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="w-32 h-56 md:w-40 md:h-64 relative cursor-pointer card" data-card-index="1" data-card-position="">
+                    <div class="card-face card-front tarot-back">
+                        <div class="w-16 h-16 rounded-full crystal-ball"></div>
+                    </div>
+                    <div class="card-face card-back flex flex-col justify-between p-4">
+                        <div class="relative">
+                            <div class="text-lg font-semibold circus-font" id="card-name-1">The Magician</div>
+                            <div id="reversal-indicator-1" class="absolute -top-2 -right-2 w-4 h-4 bg-[var(--accent)] rounded-full hidden" title="Reversed"></div>
+                        </div>
+                        <div class="text-sm" id="card-desc-1">Manifestation of will</div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs italic" id="card-type-1">Major Arcana</span>
+                            <span id="element-indicator-1" class="text-xs px-2 py-1 rounded-full bg-opacity-20 hidden"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="w-32 h-56 md:w-40 md:h-64 relative cursor-pointer card" data-card-index="2" data-card-position="">
+                    <div class="card-face card-front tarot-back">
+                        <div class="w-16 h-16 rounded-full crystal-ball"></div>
+                    </div>
+                    <div class="card-face card-back flex flex-col justify-between p-4">
+                        <div class="relative">
+                            <div class="text-lg font-semibold circus-font" id="card-name-2">The High Priestess</div>
+                            <div id="reversal-indicator-2" class="absolute -top-2 -right-2 w-4 h-4 bg-[var(--accent)] rounded-full hidden" title="Reversed"></div>
+                        </div>
+                        <div class="text-sm" id="card-desc-2">Intuition and secrets</div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs italic" id="card-type-2">Major Arcana</span>
+                            <span id="element-indicator-2" class="text-xs px-2 py-1 rounded-full bg-opacity-20 hidden"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="draw-btn" class="mt-10 px-8 py-3 bg-[var(--accent)] text-white rounded-lg text-xl hover:bg-pink-700 transition-colors transform hover:scale-105 shadow-lg hover:shadow-[0_0_15px_rgba(255,56,100,0.7)] border border-pink-500 opacity-50 cursor-not-allowed" disabled>
+                Draw Cards
+            </button>
+        </div>
+
+        <!-- Fortune Display -->
+        <div id="fortune-display" class="hidden mt-16 p-6 bg-gray-900 bg-opacity-70 rounded-xl border border-[var(--purple)] relative z-10 backdrop-blur-sm">
+            <h2 class="text-2xl md:text-3xl circus-font text-[var(--gold)] mb-6 text-center drop-shadow-[0_0_5px_rgba(212,175,55,0.5)]">Your Fortune</h2>
+            <div class="fortune-text text-lg md:text-xl leading-relaxed" id="fortune-text">
+                Your destiny awaits... The cards will reveal your path.
+            </div>
+            <div class="text-center mt-8">
+                <button id="new-reading-btn" class="px-6 py-2 bg-[var(--purple)] text-white rounded-lg hover:bg-purple-800 transition-colors border border-purple-600 hover:border-purple-400">
+                    New Reading
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced tarot deck with elemental associations and reversed meanings
+        const tarotDeck = [
+            { 
+                name: "The Fool", 
+                type: "Major Arcana", 
+                element: "Air",
+                description: "New beginnings, innocence, spontaneity", 
+                fortune: "A new journey is beginning for you. Embrace the unknown with an open heart, for it holds great potential.",
+                reversed: "Recklessness, risk-taking, bad decisions"
+            },
+            { 
+                name: "The Magician", 
+                type: "Major Arcana", 
+                element: "Mercury",
+                description: "Manifestation, resourcefulness, power", 
+                fortune: "You have all the tools you need to succeed. Now is the time to harness your skills and manifest your desires.",
+                reversed: "Manipulation, untapped talents, trickery"
+            },
+            { 
+                name: "The High Priestess", 
+                type: "Major Arcana", 
+                element: "Moon",
+                description: "Intuition, unconscious knowledge, divine feminine", 
+                fortune: "Listen to your inner voice. Hidden knowledge will soon be revealed to you if you trust your intuition.",
+                reversed: "Secrets, disconnected from intuition, withdrawal"
+            },
+            { 
+                name: "The Empress", 
+                type: "Major Arcana", 
+                element: "Venus",
+                description: "Femininity, beauty, abundance", 
+                fortune: "Abundance flows into your life. Nurture your creative projects and relationships for bountiful results.",
+                reversed: "Creative block, dependence on others, overindulgence"
+            },
+            { 
+                name: "The Emperor", 
+                type: "Major Arcana", 
+                element: "Aries",
+                description: "Authority, structure, control", 
+                fortune: "Take command of your situation. Establishing structure and boundaries will lead to success.",
+                reversed: "Domination, excessive control, rigidity"
+            },
+            // Additional cards with reversed meanings and elements
+            { 
+                name: "Wheel of Fortune", 
+                type: "Major Arcana", 
+                element: "Jupiter",
+                description: "Good luck, karma, destiny, a turning point", 
+                fortune: "A cycle is completing. Embrace change as your luck is about to turn for the better.",
+                reversed: "Resistance to change, bad luck, delays"
+            },
+            { 
+                name: "Justice", 
+                type: "Major Arcana", 
+                element: "Libra",
+                description: "Justice, fairness, truth", 
+                fortune: "Truth will be revealed. The universe is balancing the scales in your favor.",
+                reversed: "Dishonesty, unfairness, lack of accountability"
+            },
+            { 
+                name: "Ace of Cups", 
+                type: "Cups", 
+                element: "Water",
+                description: "New feelings, compassion, creativity", 
+                fortune: "Emotional renewal is coming. Open your heart to love, creativity, and spiritual fulfillment.",
+                reversed: "Emotional loss, blocked creativity, emptiness"
+            },
+            { 
+                name: "Three of Swords", 
+                type: "Swords", 
+                element: "Air",
+                description: "Heartbreak, suffering, grief", 
+                fortune: "Painful moments may come, but they are necessary for growth and eventual healing.",
+                reversed: "Recovery, forgiveness, moving on"
+            },
+            { 
+                name: "Death", 
+                type: "Major Arcana", 
+                element: "Scorpio",
+                description: "End of cycle, beginnings, change", 
+                fortune: "An ending is approaching, making way for new beginnings. Embrace transformation.",
+                reversed: "Resistance to change, inability to move on, stagnation"
+            }
+        ];
+
+        // Add more cards with enhanced data
+        for (let i = tarotDeck.length; i < 100; i++) {
+            const suits = ["Wands", "Cups", "Swords", "Pentacles"];
+            const court = ["Page", "Knight", "Queen", "King"];
+            const numbers = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+            
+            // Element associations
+            const suitElements = {
+                "Wands": "Fire",
+                "Cups": "Water",
+                "Swords": "Air",
+                "Pentacles": "Earth"
+            };
+            
+            let name, type, description, fortune, reversed, element;
+            
+            if (i < 22) {
+                // Major Arcana cards
+                const majorNames = [
+                    "The Hanged Man", "Temperance", "The Devil", "The Tower", 
+                    "The Star", "The Moon", "The Sun", "Judgement", "The World"
+                ];
+                const majorElements = [
+                    "Water", "Sagittarius", "Capricorn", "Mars", 
+                    "Aquarius", "Pisces", "Sun", "Fire", "Saturn"
+                ];
+                name = majorNames[i - 15] || `Major ${i}`;
+                type = "Major Arcana";
+                element = majorElements[i - 15] || "Spirit";
+                description = "Significant life event, karmic lesson";
+                fortune = `A major life lesson is approaching. ${name} indicates profound transformation.`;
+                reversed = `Blocked energy, resistance to ${name}'s lessons`;
+            } else if (i < 56) {
+                // Minor Arcana court cards
+                const suit = suits[Math.floor((i-22) / 4) % 4];
+                const rank = court[(i-22) % 4];
+                name = `${rank} of ${suit}`;
+                type = suit;
+                element = suitElements[suit];
+                description = `${rank} energy in ${suit} matters`;
+                fortune = `The ${rank} of ${suit} brings its unique energy to your situation.`;
+                reversed = `Immature expression of ${suit} energy, blocked ${suit.toLowerCase()}`;
+            } else {
+                // Minor Arcana numbered cards
+                const suit = suits[i % 4];
+                const number = numbers[(i-56) % 10];
+                name = `${number} of ${suit}`;
+                type = suit;
+                element = suitElements[suit];
+                description = `${number} energy in ${suit} matters`;
+                fortune = `The ${number} of ${suit} influences your path with its numerical significance.`;
+                reversed = `Blocked ${suit.toLowerCase()}, challenges with ${number.toLowerCase()} energy`;
+            }
+            
+            tarotDeck.push({ name, type, element, description, fortune, reversed });
+        }
+
+        // Shuffle function
+        function shuffleDeck(deck) {
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+            return deck;
+        }
+
+        // Game state with enhanced properties
+        let gameState = {
+            deck: [],
+            drawnCards: [],
+            fortunesRevealed: 0,
+            isMeditating: false,
+            currentSpread: "past-present-future",
+            cardReversals: [false, false, false]
+        };
+
+        // DOM elements
+        const gameContainer = document.getElementById('game-container');
+        const resetBtn = document.getElementById('reset-btn');
+        const drawBtn = document.getElementById('draw-btn');
+        const cardElements = document.querySelectorAll('.card');
+        const fortuneDisplay = document.getElementById('fortune-display');
+        const fortuneText = document.getElementById('fortune-text');
+        const newReadingBtn = document.getElementById('new-reading-btn');
+        const startMeditationBtn = document.getElementById('start-meditation');
+        const timerCircle = document.getElementById('timer-circle');
+        const timerCount = document.getElementById('timer-count');
+        const spreadButtons = document.querySelectorAll('.spread-btn');
+
+        // Initialize game
+        function initGame() {
+            gameState.deck = shuffleDeck([...tarotDeck]);
+            gameState.drawnCards = [];
+            gameState.fortunesRevealed = 0;
+            gameState.cardReversals = [false, false, false];
+            
+            // Reset card display - flip them back to face down
+            cardElements.forEach((card, index) => {
+                card.classList.remove('flipped');
+                card.classList.add('card-enter');
+                card.setAttribute('data-card-position', '');
+                
+                // Hide reversal indicators
+                document.getElementById(`reversal-indicator-${index}`).classList.add('hidden');
+                
+                // Hide element indicators
+                const elementIndicator = document.getElementById(`element-indicator-${index}`);
+                elementIndicator.classList.add('hidden');
+                elementIndicator.className = 'text-xs px-2 py-1 rounded-full bg-opacity-20 hidden';
+                
+                setTimeout(() => {
+                    card.classList.remove('card-enter');
+                }, 800);
+            });
+            
+            // Hide fortune display
+            fortuneDisplay.classList.add('hidden');
+            
+            // Reset meditation timer
+            timerCircle.style.strokeDashoffset = '283';
+            timerCount.textContent = '5';
+            
+            // Disable draw button until meditation is complete
+            drawBtn.disabled = true;
+            drawBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
+        // Start meditation timer
+        function startMeditation() {
+            if (gameState.isMeditating) return;
+            
+            gameState.isMeditating = true;
+            startMeditationBtn.disabled = true;
+            startMeditationBtn.textContent = "Focusing...";
+            
+            let timeLeft = 5;
+            const radius = 45;
+            const circumference = 2 * Math.PI * radius;
+            
+            const timer = setInterval(() => {
+                timeLeft--;
+                timerCount.textContent = timeLeft;
+                
+                // Update circle progress
+                const offset = circumference - (timeLeft / 5) * circumference;
+                timerCircle.style.strokeDashoffset = offset;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    gameState.isMeditating = false;
+                    startMeditationBtn.disabled = false;
+                    startMeditationBtn.textContent = "Begin Focus";
+                    
+                    // Enable draw button
+                    drawBtn.disabled = false;
+                    drawBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    
+                    // Create a shooting star effect
+                    createShootingStar(document.getElementById('stars'), true);
+                }
+            }, 1000);
+        }
+        
+        // Draw cards
+        function drawCards() {
+            if (gameState.fortunesRevealed > 0 || !drawBtn.disabled === false) return;
+            
+            // Draw three random cards
+            gameState.drawnCards = [];
+            gameState.cardReversals = [];
+            
+            for (let i = 0; i < 3; i++) {
+                const randomIndex = Math.floor(Math.random() * gameState.deck.length);
+                const card = gameState.deck[randomIndex];
+                
+                // Determine if card is reversed (20% chance)
+                const isReversed = Math.random() < 0.2;
+                gameState.cardReversals.push(isReversed);
+                
+                gameState.drawnCards.push(card);
+                
+                // Update card display
+                const cardElement = document.querySelector(`[data-card-index="${i}"]`);
+                const cardName = cardElement.querySelector(`#card-name-${i}`);
+                const cardDesc = cardElement.querySelector(`#card-desc-${i}`);
+                const cardType = cardElement.querySelector(`#card-type-${i}`);
+                const reversalIndicator = document.getElementById(`reversal-indicator-${i}`);
+                const elementIndicator = document.getElementById(`element-indicator-${i}`);
+                
+                // Set position based on spread
+                let positionText = "";
+                if (gameState.currentSpread === "past-present-future") {
+                    positionText = ["Past", "Present", "Future"][i];
+                } else if (gameState.currentSpread === "situation-action-outcome") {
+                    positionText = ["Situation", "Action", "Outcome"][i];
+                } else if (gameState.currentSpread === "mind-body-spirit") {
+                    positionText = ["Mind", "Body", "Spirit"][i];
+                }
+                cardElement.setAttribute('data-card-position', positionText);
+                
+                cardName.textContent = gameState.drawnCards[i].name;
+                cardDesc.textContent = isReversed ? "(Reversed) " + gameState.drawnCards[i].description : gameState.drawnCards[i].description;
+                cardType.textContent = gameState.drawnCards[i].type;
+                
+                // Show reversal indicator if reversed
+                if (isReversed) {
+                    reversalIndicator.classList.remove('hidden');
+                } else {
+                    reversalIndicator.classList.add('hidden');
+                }
+                
+                // Show element indicator
+                if (gameState.drawnCards[i].element) {
+                    elementIndicator.textContent = gameState.drawnCards[i].element;
+                    elementIndicator.classList.remove('hidden');
+                    
+                    // Color code based on element
+                    if (gameState.drawnCards[i].element === "Fire") {
+                        elementIndicator.classList.add('bg-red-500', 'text-red-200');
+                    } else if (gameState.drawnCards[i].element === "Water") {
+                        elementIndicator.classList.add('bg-blue-500', 'text-blue-200');
+                    } else if (gameState.drawnCards[i].element === "Air") {
+                        elementIndicator.classList.add('bg-gray-300', 'text-gray-700');
+                    } else if (gameState.drawnCards[i].element === "Earth") {
+                        elementIndicator.classList.add('bg-amber-700', 'text-amber-200');
+                    } else {
+                        elementIndicator.classList.add('bg-purple-500', 'text-purple-200');
+                    }
+                }
+                
+                // Animate card flip with delay - cards will flip face up
+                setTimeout(() => {
+                    cardElement.classList.add('flipped');
+                }, 500 * i);
+            }
+            
+            // Generate and display fortune after all cards are flipped
+            setTimeout(() => {
+                generateFortune();
+            }, 2000);
+        }
+
+        // Generate fortune based on drawn cards with reversals and spread context
+        function generateFortune() {
+            gameState.fortunesRevealed++;
+            
+            // Get position names based on spread
+            let positions = [];
+            if (gameState.currentSpread === "past-present-future") {
+                positions = ["Past", "Present", "Future"];
+            } else if (gameState.currentSpread === "situation-action-outcome") {
+                positions = ["Situation", "Recommended Action", "Potential Outcome"];
+            } else if (gameState.currentSpread === "mind-body-spirit") {
+                positions = ["Mind", "Body", "Spirit"];
+            }
+            
+            // Combine fortunes from all three cards with reversal consideration
+            let combinedFortune = `<div class="space-y-6">`;
+            
+            for (let i = 0; i < 3; i++) {
+                const card = gameState.drawnCards[i];
+                const isReversed = gameState.cardReversals[i];
+                const position = positions[i];
+                
+                const fortuneText = isReversed ? card.reversed : card.fortune;
+                
+                combinedFortune += `
+                    <div class="bg-black bg-opacity-40 p-4 rounded-lg border-l-4 ${isReversed ? 'border-[var(--accent)]' : 'border-[var(--gold)]'}">
+                        <h3 class="text-lg font-semibold circus-font ${isReversed ? 'text-[var(--accent)]' : 'text-[var(--gold)]'}">${position}: ${card.name} ${isReversed ? '(Reversed)' : ''}</h3>
+                        <p class="mt-2">${fortuneText}</p>
+                        <div class="mt-2 text-sm text-gray-400">Element: ${card.element}</div>
+                    </div>
+                `;
+            }
+            
+            // Add overall interpretation based on card combinations
+            combinedFortune += `
+                <div class="mt-6 p-4 bg-gradient-to-r from-[var(--purple)] to-[var(--accent)] bg-opacity-20 rounded-lg">
+                    <h3 class="text-lg font-semibold circus-font text-[var(--gold)]">Overall Reading</h3>
+                    <p class="mt-2">${generateOverallInterpretation()}</p>
+                </div>
+                <p class="mt-6 italic text-[var(--gold)] text-center">The cards have spoken. Remember that destiny is not fixed, but shaped by your choices.</p>
+            </div>`;
+            
+            fortuneText.innerHTML = combinedFortune;
+            fortuneDisplay.classList.remove('hidden');
+            fortuneDisplay.classList.add('fortune-reveal');
+        }
+        
+        // Generate overall interpretation based on card combinations
+        function generateOverallInterpretation() {
+            const elements = gameState.drawnCards.map(card => card.element);
+            const hasReversals = gameState.cardReversals.includes(true);
+            
+            let interpretation = "";
+            
+            // Element-based interpretation
+            const elementCount = {};
+            elements.forEach(element => {
+                elementCount[element] = (elementCount[element] || 0) + 1;
+            });
+            
+            if (elementCount['Fire'] >= 2) {
+                interpretation += "Your reading is dominated by Fire energy, suggesting passion, action, and transformation are key themes. ";
+            } else if (elementCount['Water'] >= 2) {
+                interpretation += "With strong Water influence, emotions, intuition, and relationships play a significant role. ";
+            } else if (elementCount['Air'] >= 2) {
+                interpretation += "Air elements dominate, indicating thoughts, communication, and intellectual matters are central. ";
+            } else if (elementCount['Earth'] >= 2) {
+                interpretation += "Earth energy prevails, focusing on practical matters, stability, and material world concerns. ";
+            }
+            
+            // Reversal-based interpretation
+            if (hasReversals) {
+                const reversalCount = gameState.cardReversals.filter(r => r).length;
+                if (reversalCount === 1) {
+                    interpretation += "With one reversed card, there may be a blocked area needing attention. ";
+                } else if (reversalCount >= 2) {
+                    interpretation += "Multiple reversed cards suggest significant internal work is needed before external progress. ";
+                }
+            } else {
+                interpretation += "All cards upright indicate clear energy flow and direct manifestation potential. ";
+            }
+            
+            // Spread-based interpretation
+            if (gameState.currentSpread === "past-present-future") {
+                interpretation += "Looking at your past, present, and future, there's a clear narrative unfolding. ";
+            } else if (gameState.currentSpread === "situation-action-outcome") {
+                interpretation += "This situation-action-outcome spread reveals both challenges and opportunities ahead. ";
+            } else if (gameState.currentSpread === "mind-body-spirit") {
+                interpretation += "Your mind, body, and spirit are communicating important messages about balance. ";
+            }
+            
+            interpretation += "Consider how these energies interact in your life for deeper understanding.";
+            
+            return interpretation;
+        }
+
+        // Event listeners
+        resetBtn.addEventListener('click', initGame);
+        drawBtn.addEventListener('click', drawCards);
+        newReadingBtn.addEventListener('click', initGame);
+        startMeditationBtn.addEventListener('click', startMeditation);
+        
+        // Spread selection
+        spreadButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                spreadButtons.forEach(btn => btn.classList.remove('bg-[var(--purple)]'));
+                button.classList.add('bg-[var(--purple)]');
+                
+                // Update spread type
+                gameState.currentSpread = button.getAttribute('data-spread');
+            });
+        });
+
+        // Allow clicking on individual cards to reveal
+        cardElements.forEach(card => {
+            card.addEventListener('click', () => {
+                if (gameState.drawnCards.length === 0) {
+                    drawCards();
+                } else {
+                    card.classList.toggle('flipped');
+                }
+            });
+        });
+
+        // Initialize game directly on load
+        window.addEventListener('load', function() {
+            initGame();
+            createStars();
+        });
+
+        // Create enhanced starry background
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            starsContainer.innerHTML = '';
+            
+            // Create 500 stars of different sizes
+            for (let i = 0; i < 500; i++) {
+                const star = document.createElement('div');
+                
+                // Random size class
+                const sizeRand = Math.random();
+                if (sizeRand < 0.6) {
+                    star.classList.add('star', 'small');
+                } else if (sizeRand < 0.9) {
+                    star.classList.add('star', 'medium');
+                } else {
+                    star.classList.add('star', 'large');
+                }
+                
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                
+                // Random delay for twinkling
+                const delay = Math.random() * 5;
+                
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.animationDelay = `${delay}s`;
+                
+                starsContainer.appendChild(star);
+            }
+            
+            // Create shooting stars
+            for (let i = 0; i < 5; i++) {
+                createShootingStar(starsContainer);
+            }
+        }
+        
+        function createShootingStar(container) {
+            const shootingStar = document.createElement('div');
+            shootingStar.classList.add('shooting-star');
+            
+            const startY = Math.random() * 50;
+            const length = Math.random() * 100 + 50;
+            const delay = Math.random() * 15;
+            
+            shootingStar.style.top = `${startY}%`;
+            shootingStar.style.left = '0';
+            shootingStar.style.width = `${length}px`;
+            shootingStar.style.animationDelay = `${delay}s`;
+            
+            container.appendChild(shootingStar);
+            
+            // Remove and recreate after animation completes
+            setTimeout(() => {
+                container.removeChild(shootingStar);
+                createShootingStar(container);
+            }, 4000);
+        }
+
+    </script>
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=44444t/tarot" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+</html>
