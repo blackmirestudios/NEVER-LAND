@@ -707,7 +707,9 @@
             cannon.appendChild(muzzleFlash);
             
             setTimeout(() => {
-                cannon.removeChild(muzzleFlash);
+                if (muzzleFlash.parentNode === cannon) {
+                    cannon.removeChild(muzzleFlash);
+                }
             }, 100);
             
             // Check if any target was hit
@@ -752,7 +754,9 @@
                         scene.appendChild(comboText);
                         
                         setTimeout(() => {
-                            scene.removeChild(comboText);
+                            if (comboText.parentNode === scene) {
+                                scene.removeChild(comboText);
+                            }
                         }, 1000);
                     }
                     
@@ -767,10 +771,6 @@
                     // Play hit sound
                     hitSound.currentTime = 0;
                     hitSound.play().catch(() => {});
-                    
-                    // Get target position for effects
-                    const targetX = targetRect.left - rect.left + targetRect.width / 2;
-                    const targetY = targetRect.top - rect.top + targetRect.height / 2;
                     
                     // Add hit effect to target
                     target.element.classList.add('hit-effect');
@@ -804,7 +804,7 @@
                             
                             // Remove spark after animation
                             setTimeout(() => {
-                                if (spark.parentNode) {
+                                if (spark.parentNode === scene) {
                                     scene.removeChild(spark);
                                 }
                             }, 800);
@@ -813,10 +813,16 @@
                     
                     // Remove target and effects after animation
                     setTimeout(() => {
-                        scene.removeChild(target.element);
-                        scene.removeChild(target.bar);
-                        scene.removeChild(target.stand);
-                        if (explosion.parentNode) {
+                        if (target.element.parentNode === scene) {
+                            scene.removeChild(target.element);
+                        }
+                        if (target.bar.parentNode === scene) {
+                            scene.removeChild(target.bar);
+                        }
+                        if (target.stand.parentNode === scene) {
+                            scene.removeChild(target.stand);
+                        }
+                        if (explosion.parentNode === scene) {
                             scene.removeChild(explosion);
                         }
                     }, 600);
@@ -841,7 +847,9 @@
                     scene.appendChild(pointsPopup);
                     
                     setTimeout(() => {
-                        scene.removeChild(pointsPopup);
+                        if (pointsPopup.parentNode === scene) {
+                            scene.removeChild(pointsPopup);
+                        }
                     }, 1000);
                     
                     // Check if all targets are hit
@@ -998,7 +1006,7 @@
         }
         
         // Initialize the game when the page loads
-        window.onload = initGame;
+        window.addEventListener('load', initGame);
         
         // Add fadeUp animation for points and combo text
         document.head.insertAdjacentHTML('beforeend', '<style>@keyframes fadeUp {0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-30px); }}</style>');
