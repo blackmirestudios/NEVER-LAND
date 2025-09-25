@@ -392,7 +392,7 @@
         
         <!-- Header -->
         <header class="flex justify-between items-center mb-12 relative z-10">
-            <h1 class="text-2xl md:text-3xl circus-font text-[var(--accent)] drop-shadow-[0_0_5px_rgba(255,56,100,0.7)]">Sinister Circus Tarot</h1>
+            <h1 class="text-2xl md:text-3xl circus-font text-[var(--accent)] drop-shadow-[0_0_5px_rgba(255,56,100,0.7)]">Maria's and Mystis Tarot</h1>
             <button id="reset-btn" class="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-[var(--accent)] transition-colors border border-gray-700 hover:border-[var(--accent)]">
                 <i class="fas fa-redo mr-2"></i>Reset
             </button>
@@ -414,6 +414,32 @@
                 </div>
                 <button id="start-meditation" class="px-6 py-2 bg-[var(--purple)] text-white rounded-lg hover:bg-purple-800 transition-colors border border-purple-600 hover:border-purple-400">
                     Begin Focus
+                </button>
+            </div>
+        </div>
+
+        <!-- Question Modal -->
+        <div id="question-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+            <div class="bg-gray-900 rounded-xl p-6 max-w-md w-full border border-[var(--purple)]">
+                <div class="text-center mb-4">
+                    <h3 class="text-xl circus-font text-[var(--gold)]">Meditation Questions</h3>
+                    <p class="text-sm text-gray-400 mt-1">Question <span id="question-number">1/5</span></p>
+                </div>
+                
+                <div class="mb-6">
+                    <p id="question-text" class="text-lg text-gray-200 mb-4 text-center"></p>
+                    <textarea 
+                        id="question-input" 
+                        class="w-full bg-gray-800 text-white rounded-lg p-3 border border-gray-700 focus:border-[var(--purple)] focus:outline-none resize-none h-24"
+                        placeholder="Share your thoughts..."
+                    ></textarea>
+                </div>
+                
+                <button 
+                    id="next-question-btn" 
+                    class="w-full px-6 py-3 bg-[var(--purple)] text-white rounded-lg hover:bg-purple-800 transition-colors border border-purple-600 hover:border-purple-400"
+                >
+                    Next Question
                 </button>
             </div>
         </div>
@@ -718,10 +744,54 @@
             drawBtn.classList.add('opacity-50', 'cursor-not-allowed');
         }
 
-        // Start meditation timer
+        // Questions for meditation focus
+        const meditationQuestions = [
+            "What question weighs most heavily on your heart today?",
+            "What aspect of your life needs clarity right now?",
+            "What guidance are you seeking from the cards?",
+            "What energy do you wish to bring into your reading?",
+            "What outcome are you hoping to understand better?"
+        ];
+
+        // Start meditation with questions
         function startMeditation() {
             if (gameState.isMeditating) return;
             
+            // Show question modal
+            const questionModal = document.getElementById('question-modal');
+            const questionText = document.getElementById('question-text');
+            const questionInput = document.getElementById('question-input');
+            const nextQuestionBtn = document.getElementById('next-question-btn');
+            
+            let currentQuestionIndex = 0;
+            let userResponses = [];
+            
+            function showQuestion(index) {
+                if (index >= meditationQuestions.length) {
+                    // All questions answered, start timer
+                    questionModal.classList.add('hidden');
+                    startMeditationTimer();
+                    return;
+                }
+                
+                questionText.textContent = meditationQuestions[index];
+                questionInput.value = userResponses[index] || '';
+                document.getElementById('question-number').textContent = `${index + 1}/${meditationQuestions.length}`;
+            }
+            
+            nextQuestionBtn.onclick = function() {
+                userResponses[currentQuestionIndex] = questionInput.value;
+                currentQuestionIndex++;
+                showQuestion(currentQuestionIndex);
+            };
+            
+            // Show first question
+            questionModal.classList.remove('hidden');
+            showQuestion(currentQuestionIndex);
+        }
+
+        // Start meditation timer after questions
+        function startMeditationTimer() {
             gameState.isMeditating = true;
             startMeditationBtn.disabled = true;
             startMeditationBtn.textContent = "Focusing...";
@@ -1026,5 +1096,5 @@
         }
 
     </script>
-
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=44444t/tarot" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
 </html>
