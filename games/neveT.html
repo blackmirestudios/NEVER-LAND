@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Never Teller - Fortune Teller Game</title>
+    <title>Never Teller Mysti - The Magical Cat</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
     <style>
@@ -389,21 +389,40 @@
     
     <!-- Main Menu -->
     <div id="main-menu" class="flex flex-col items-center justify-center min-h-screen">
-        <h1 class="text-7xl md:text-9xl mb-2 text-center" style="font-family: 'Creepster', cursive; color: #ff0000; text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 4px 4px 0 #000, 8px 8px 0 rgba(0,0,0,0.5); transform: rotate(-5deg);">Never Teller</h1>
-        <h2 class="text-2xl md:text-3xl mb-8 text-center" style="font-family: 'Creepster', cursive; color: #ffcc00; text-shadow: 0 0 5px #ff0000, 2px 2px 0 #000;">"Revealer of Dark Fates"</h2>
+        <h1 class="text-7xl md:text-9xl mb-2 text-center" style="font-family: 'Creepster', cursive; color: #ff0000; text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 4px 4px 0 #000, 8px 8px 0 rgba(0,0,0,0.5); transform: rotate(-5deg);">Never Teller Mysti</h1>
+        <h2 class="text-2xl md:text-3xl mb-8 text-center" style="font-family: 'Creepster', cursive; color: #ffcc00; text-shadow: 0 0 5px #ff0000, 2px 2px 0 #000;">"The Magical Cat Fortune Teller"</h2>
         <button id="play-button" class="px-8 py-4 text-2xl mb-4 font-bold" style="font-family: 'Creepster', cursive; background: linear-gradient(135deg, #ff0000, #8b0000); border: 3px solid #ffcc00; border-radius: 12px; box-shadow: 0 0 10px #ff0000; color: #ffcc00; text-shadow: 2px 2px 0 #000;">ENTER IF YOU DARE</button>
         <div class="text-center max-w-md px-4 pixel-text">
-            <p class="text-red-400">Dare to learn your twisted fate...</p>
-            <p class="mt-2 text-sm text-red-300">The crystal ball sees your darkest secrets...</p>
+            <p class="text-red-400">Dare to learn your feline fate...</p>
+            <p class="mt-2 text-sm text-red-300">Mysti the magical cat sees your secrets...</p>
         </div>
     </div>
     
     <!-- Game Screen -->
     <div id="game-screen" class="hidden flex flex-col items-center justify-between min-h-screen">
+        <!-- Mysti Silhouette - Positioned much higher up with head above the circle -->
+        <div class="absolute top-[-20%] left-0 w-full h-full z-0 pointer-events-none">
+            <svg id="mysti-silhouette" class="w-full h-full transition-all duration-500 ease-in-out" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style="filter: drop-shadow(0 0 30px rgba(138, 43, 226, 0.8)); opacity: 0.7;">
+                <!-- Cat body -->
+                <path d="M40,65 Q45,55 50,60 Q55,55 60,65 Q65,75 60,85 Q55,90 50,85 Q45,90 40,85 Q35,75 40,65 Z" fill="#000"/>
+                <!-- Cat head -->
+                <path d="M35,45 Q40,35 50,40 Q60,35 65,45 Q70,55 65,60 Q60,65 50,60 Q40,65 35,60 Q30,55 35,45 Z" fill="#000"/>
+                <!-- Cat ears -->
+                <path d="M30,35 L35,25 L40,35 Z" fill="#000"/>
+                <path d="M60,35 L65,25 L70,35 Z" fill="#000"/>
+                <!-- Tail -->
+                <path d="M60,85 Q70,90 75,85 Q80,80 85,75 Q90,70 85,65" stroke="#000" stroke-width="3" fill="none"/>
+                <!-- Front paws holding the crystal ball -->
+                <circle cx="50" cy="25" r="12" fill="rgba(138, 43, 226, 0.3)" stroke="rgba(138, 43, 226, 0.8)" stroke-width="1"/>
+                <path d="M38,32 Q42,25 50,28" stroke="#000" stroke-width="2" fill="none"/>
+                <path d="M62,32 Q58,25 50,28" stroke="#000" stroke-width="2" fill="none"/>
+            </svg>
+        </div>
+        
         <!-- Crystal Ball -->
         <div class="crystal-ball w-40 h-40 md:w-64 md:h-64 rounded-full mt-16 relative">
             <div id="ball-content" class="absolute inset-0 flex items-center justify-center overflow-hidden">
-                <span class="text-xs md:text-sm text-center px-4 opacity-0 transition-opacity duration-500">Your fate awaits...</span>
+                <span class="text-xs md:text-sm text-center px-4 opacity-0 transition-opacity duration-500">Mysti awaits your question...</span>
                 <div class="absolute inset-0">
                     <div class="magic-spiral"></div>
                     <div class="energy-particles"></div>
@@ -702,8 +721,6 @@
                     "The edge of space"
                 ]
             },
-            // 80 more questions would be here in a full implementation
-            // For brevity, we'll add just a few more samples
             {
                 question: "Which of these would you trust to tell your fortune?",
                 answers: [
@@ -748,6 +765,564 @@
                     "Warm smile",
                     "Unique style"
                 ]
+            },
+            {
+                question: "Which magical artifact would you choose?",
+                answers: [
+                    "A time-traveling pocket watch",
+                    "A truth-revealing mirror",
+                    "A wish-granting lamp",
+                    "A memory-erasing stone"
+                ]
+            },
+            {
+                question: "Your approach to solving problems is...",
+                answers: [
+                    "Logical and systematic",
+                    "Creative and unconventional",
+                    "Intuitive and spontaneous",
+                    "Collaborative and consultative"
+                ]
+            },
+            {
+                question: "Which of these mythical places calls to you?",
+                answers: [
+                    "The Garden of Eden",
+                    "Camelot",
+                    "El Dorado",
+                    "Shangri-La"
+                ]
+            },
+            {
+                question: "How do you handle uncertainty?",
+                answers: [
+                    "Embrace it as an adventure",
+                    "Plan for every possibility",
+                    "Trust that things will work out",
+                    "Seek guidance from others"
+                ]
+            },
+            {
+                question: "Which celestial body fascinates you most?",
+                answers: [
+                    "The Moon",
+                    "Mars",
+                    "Jupiter",
+                    "Neptune"
+                ]
+            },
+            {
+                question: "Your ideal companion would be...",
+                answers: [
+                    "Wise and knowledgeable",
+                    "Funny and entertaining",
+                    "Loyal and protective",
+                    "Mysterious and intriguing"
+                ]
+            },
+            {
+                question: "Which of these ancient civilizations intrigues you?",
+                answers: [
+                    "The Mayans",
+                    "The Romans",
+                    "The Greeks",
+                    "The Vikings"
+                ]
+            },
+            {
+                question: "When you need inspiration, you...",
+                answers: [
+                    "Take a long walk in nature",
+                    "Listen to music",
+                    "Read books or poetry",
+                    "Meditate or daydream"
+                ]
+            },
+            {
+                question: "Which of these weather conditions do you enjoy?",
+                answers: [
+                    "Thunderstorms",
+                    "Foggy mornings",
+                    "Snowfall",
+                    "Bright sunshine"
+                ]
+            },
+            {
+                question: "Your hidden talent is probably...",
+                answers: [
+                    "Reading people's emotions",
+                    "Solving puzzles quickly",
+                    "Remembering details",
+                    "Making people laugh"
+                ]
+            },
+            {
+                question: "Which of these animals would you be?",
+                answers: [
+                    "An eagle",
+                    "A dolphin",
+                    "A tiger",
+                    "An owl"
+                ]
+            },
+            {
+                question: "How do you make important decisions?",
+                answers: [
+                    "Follow your heart",
+                    "Use logic and reason",
+                    "Consult your dreams",
+                    "Ask for signs from the universe"
+                ]
+            },
+            {
+                question: "Which of these colors represents your energy?",
+                answers: [
+                    "Gold - radiant and valuable",
+                    "Silver - reflective and adaptable",
+                    "Copper - warm and conductive",
+                    "Onyx - mysterious and protective"
+                ]
+            },
+            {
+                question: "Your greatest strength is your...",
+                answers: [
+                    "Imagination",
+                    "Determination",
+                    "Compassion",
+                    "Curiosity"
+                ]
+            },
+            {
+                question: "Which of these sounds most magical to you?",
+                answers: [
+                    "Wind chimes in a breeze",
+                    "A cat's purr",
+                    "Crackling fire",
+                    "Distant church bells"
+                ]
+            },
+            {
+                question: "When you look at clouds, you see...",
+                answers: [
+                    "Stories and characters",
+                    "Weather patterns",
+                    "Abstract shapes",
+                    "Messages from above"
+                ]
+            },
+            {
+                question: "Which of these would you collect?",
+                answers: [
+                    "Ancient coins",
+                    "Rare books",
+                    "Crystals and stones",
+                    "Vintage photographs"
+                ]
+            },
+            {
+                question: "Your ideal day would include...",
+                answers: [
+                    "Exploring somewhere new",
+                    "Learning something fascinating",
+                    "Helping someone in need",
+                    "Creating something beautiful"
+                ]
+            },
+            {
+                question: "Which of these mythical creatures do you believe in?",
+                answers: [
+                    "Unicorns",
+                    "Dragons",
+                    "Mermaids",
+                    "Phoenixes"
+                ]
+            },
+            {
+                question: "How do you connect with your intuition?",
+                answers: [
+                    "Through dreams",
+                    "In meditation",
+                    "During quiet moments",
+                    "When in nature"
+                ]
+            },
+            {
+                question: "Which of these elements would you master?",
+                answers: [
+                    "Lightning",
+                    "Water",
+                    "Earth",
+                    "Air"
+                ]
+            },
+            {
+                question: "Your life motto would be...",
+                answers: [
+                    "Carpe Diem - Seize the Day",
+                    "Knowledge is Power",
+                    "Love Conquers All",
+                    "Fortune Favors the Bold"
+                ]
+            },
+            {
+                question: "Which of these would you rather experience?",
+                answers: [
+                    "Time travel to the past",
+                    "Teleportation anywhere",
+                    "Invisibility at will",
+                    "Mind reading abilities"
+                ]
+            },
+            {
+                question: "How do you handle challenges?",
+                answers: [
+                    "Face them head-on",
+                    "Find creative solutions",
+                    "Seek help from others",
+                    "Trust they will pass"
+                ]
+            },
+            {
+                question: "Which of these symbols represents your journey?",
+                answers: [
+                    "A winding road",
+                    "A spiral staircase",
+                    "A compass rose",
+                    "A key and lock"
+                ]
+            },
+            {
+                question: "Your ideal superpower would be...",
+                answers: [
+                    "Healing touch",
+                    "Super speed",
+                    "Shape-shifting",
+                    "Telepathy"
+                ]
+            },
+            {
+                question: "Which of these historical figures inspires you?",
+                answers: [
+                    "Leonardo da Vinci",
+                    "Cleopatra",
+                    "Nikola Tesla",
+                    "Joan of Arc"
+                ]
+            },
+            {
+                question: "How do you find peace?",
+                answers: [
+                    "In solitude",
+                    "With loved ones",
+                    "Through art",
+                    "In nature"
+                ]
+            },
+            {
+                question: "Which of these would you preserve?",
+                answers: [
+                    "Ancient forests",
+                    "Endangered species",
+                    "Historical artifacts",
+                    "Cultural traditions"
+                ]
+            },
+            {
+                question: "Your approach to love is...",
+                answers: [
+                    "Romantic and idealistic",
+                    "Practical and realistic",
+                    "Mysterious and elusive",
+                    "Passionate and intense"
+                ]
+            },
+            {
+                question: "Which of these would you rather be?",
+                answers: [
+                    "A famous explorer",
+                    "A renowned scientist",
+                    "A celebrated artist",
+                    "A wise philosopher"
+                ]
+            },
+            {
+                question: "How do you view the future?",
+                answers: [
+                    "With excitement and hope",
+                    "With caution and planning",
+                    "With curiosity and wonder",
+                    "With acceptance and flow"
+                ]
+            },
+            {
+                question: "Which of these qualities do you value most?",
+                answers: [
+                    "Honesty",
+                    "Creativity",
+                    "Loyalty",
+                    "Wisdom"
+                ]
+            },
+            {
+                question: "Your dream discovery would be...",
+                answers: [
+                    "A lost civilization",
+                    "A new element",
+                    "A cure for disease",
+                    "Alien life forms"
+                ]
+            },
+            {
+                question: "Which of these would guide your decisions?",
+                answers: [
+                    "The stars and planets",
+                    "Your dreams and visions",
+                    "Logic and evidence",
+                    "Your heart's desires"
+                ]
+            },
+            {
+                question: "How do you connect with others?",
+                answers: [
+                    "Through deep conversation",
+                    "By sharing experiences",
+                    "Through humor and fun",
+                    "By offering support"
+                ]
+            },
+            {
+                question: "Which of these represents your soul?",
+                answers: [
+                    "A deep ocean",
+                    "A vast desert",
+                    "A dense forest",
+                    "A mountain peak"
+                ]
+            },
+            {
+                question: "Your ideal gift would be...",
+                answers: [
+                    "A mysterious antique",
+                    "A rare book",
+                    "A beautiful crystal",
+                    "A hand-written letter"
+                ]
+            },
+            {
+                question: "Which of these would you rather avoid?",
+                answers: [
+                    "Boredom",
+                    "Conflict",
+                    "Uncertainty",
+                    "Routine"
+                ]
+            },
+            {
+                question: "How do you handle secrets?",
+                answers: [
+                    "Keep them forever",
+                    "Share with one person",
+                    "Write them down",
+                    "Forget them quickly"
+                ]
+            },
+            {
+                question: "Which of these would you trust with your life?",
+                answers: [
+                    "Your intuition",
+                    "Your skills",
+                    "Your friends",
+                    "Fate itself"
+                ]
+            },
+            {
+                question: "Your approach to knowledge is...",
+                answers: [
+                    "Seek it endlessly",
+                    "Use it practically",
+                    "Share it generously",
+                    "Question it constantly"
+                ]
+            },
+            {
+                question: "Which of these would you rather create?",
+                answers: [
+                    "A timeless work of art",
+                    "A revolutionary invention",
+                    "A beautiful garden",
+                    "A loving family"
+                ]
+            },
+            {
+                question: "How do you view the past?",
+                answers: [
+                    "As lessons to learn from",
+                    "As memories to cherish",
+                    "As something to move beyond",
+                    "As a foundation for growth"
+                ]
+            },
+            {
+                question: "Which of these would you protect?",
+                answers: [
+                    "Ancient wisdom",
+                    "Natural beauty",
+                    "Personal freedom",
+                    "Creative expression"
+                ]
+            },
+            {
+                question: "Your ideal teacher would be...",
+                answers: [
+                    "A wise elder",
+                    "A mystical guide",
+                    "A practical mentor",
+                    "An inspiring visionary"
+                ]
+            },
+            {
+                question: "Which of these represents your dreams?",
+                answers: [
+                    "A starry night sky",
+                    "A vast ocean",
+                    "A mountain range",
+                    "A dense fog"
+                ]
+            },
+            {
+                question: "How do you find answers?",
+                answers: [
+                    "Through research",
+                    "By meditating",
+                    "Asking others",
+                    "Waiting for signs"
+                ]
+            },
+            {
+                question: "Which of these would you rather experience?",
+                answers: [
+                    "Walking on the moon",
+                    "Swimming with whales",
+                    "Flying with eagles",
+                    "Running with wolves"
+                ]
+            },
+            {
+                question: "Your approach to mystery is...",
+                answers: [
+                    "Solve it immediately",
+                    "Enjoy the unknown",
+                    "Seek help solving it",
+                    "Let it reveal itself"
+                ]
+            },
+            {
+                question: "Which of these would you rather have?",
+                answers: [
+                    "The ability to heal",
+                    "The gift of prophecy",
+                    "Superhuman strength",
+                    "Eternal youth"
+                ]
+            },
+            {
+                question: "How do you view change?",
+                answers: [
+                    "As an opportunity",
+                    "As a challenge",
+                    "As inevitable",
+                    "As transformative"
+                ]
+            },
+            {
+                question: "Which of these would guide your path?",
+                answers: [
+                    "Your values",
+                    "Your dreams",
+                    "Your logic",
+                    "Your heart"
+                ]
+            },
+            {
+                question: "Your ideal companion on a journey would be...",
+                answers: [
+                    "A wise philosopher",
+                    "A brave warrior",
+                    "A clever trickster",
+                    "A loyal friend"
+                ]
+            },
+            {
+                question: "Which of these represents your inner world?",
+                answers: [
+                    "A library",
+                    "A garden",
+                    "A laboratory",
+                    "A theater"
+                ]
+            },
+            {
+                question: "How do you handle the unknown?",
+                answers: [
+                    "With curiosity",
+                    "With caution",
+                    "With excitement",
+                    "With trust"
+                ]
+            },
+            {
+                question: "Which of these would you rather master?",
+                answers: [
+                    "The art of conversation",
+                    "The science of cooking",
+                    "The skill of negotiation",
+                    "The practice of meditation"
+                ]
+            },
+            {
+                question: "Your approach to life is...",
+                answers: [
+                    "A grand adventure",
+                    "A beautiful puzzle",
+                    "A meaningful journey",
+                    "A creative expression"
+                ]
+            },
+            {
+                question: "Which of these would you preserve forever?",
+                answers: [
+                    "A childhood memory",
+                    "A first love",
+                    "A great achievement",
+                    "A moment of peace"
+                ]
+            },
+            {
+                question: "How do you connect with magic?",
+                answers: [
+                    "Through nature",
+                    "Through rituals",
+                    "Through imagination",
+                    "Through silence"
+                ]
+            },
+            {
+                question: "Which of these represents your potential?",
+                answers: [
+                    "A seed waiting to grow",
+                    "A book waiting to be written",
+                    "A journey waiting to begin",
+                    "A song waiting to be sung"
+                ]
+            },
+            {
+                question: "Your ideal ending would be...",
+                answers: [
+                    "A new beginning",
+                    "A peaceful resolution",
+                    "A dramatic climax",
+                    "A mysterious twist"
+                ]
             }
         ];
         
@@ -790,6 +1365,99 @@
         let currentQuestionIndex = 0;
         let selectedQuestions = [];
         let answers = [];
+        
+        // Mysti's cute messages
+        const mystiMessages = [
+            "Mysti is purring with excitement! 🐾",
+            "Mysti sees something sparkly in your future! ✨",
+            "Mysti's whiskers are twitching with anticipation! 😸",
+            "Mysti is doing a happy dance for you! 💃",
+            "Mysti sees lots of treats coming your way! 🍬",
+            "Mysti is napping... just kidding, she's watching! 😴",
+            "Mysti's tail is doing the fortune-telling wiggle! 🐱",
+            "Mysti says you're her favorite human today! ❤️",
+            "Mysti is batting at the cosmic strings for you! 🧶",
+            "Mysti sees catnip and happiness in your future! 🌿"
+        ];
+
+        // Mysti's silhouette poses (SVG paths for different cat poses)
+        const mystiPoses = [
+            // Sitting pose (default)
+            `<path d="M30,70 Q40,65 50,70 Q60,65 70,70 L70,85 Q65,90 60,85 Q55,90 50,85 Q45,90 40,85 Q35,90 30,85 Z" fill="#000"/>
+             <path d="M40,50 Q45,40 50,45 Q55,40 60,50 Q65,60 60,70 Q55,75 50,70 Q45,75 40,70 Q35,60 40,50 Z" fill="#000"/>
+             <ellipse cx="50" cy="40" rx="15" ry="12" fill="#000"/>
+             <path d="M35,30 L40,20 L45,30 Z" fill="#000"/>
+             <path d="M55,30 L60,20 L65,30 Z" fill="#000"/>
+             <path d="M60,70 Q70,65 75,60 Q80,55 75,50 Q70,45 65,50 Q60,55 60,60 Z" fill="#000"/>`,
+            
+            // Curled up pose
+            `<circle cx="50" cy="50" r="20" fill="#000"/>
+             <ellipse cx="50" cy="40" rx="12" ry="10" fill="#000"/>
+             <path d="M35,30 L40,20 L45,30 Z" fill="#000"/>
+             <path d="M55,30 L60,20 L65,30 Z" fill="#000"/>
+             <path d="M45,60 Q50,65 55,60" stroke="#000" stroke-width="2" fill="none"/>`,
+            
+            // Stretching pose
+            `<path d="M30,60 Q35,50 40,55 Q45,50 50,55 Q55,50 60,55 Q65,50 70,60 L70,75 Q65,80 60,75 Q55,80 50,75 Q45,80 40,75 Q35,80 30,75 Z" fill="#000"/>
+             <ellipse cx="50" cy="40" rx="15" ry="12" fill="#000"/>
+             <path d="M35,30 L40,20 L45,30 Z" fill="#000"/>
+             <path d="M55,30 L60,20 L65,30 Z" fill="#000"/>
+             <path d="M70,55 Q80,50 85,45" stroke="#000" stroke-width="3" fill="none"/>`,
+            
+            // Pouncing pose
+            `<path d="M40,60 Q45,50 50,55 Q55,50 60,60 Q65,70 60,80 Q55,85 50,80 Q45,85 40,80 Q35,70 40,60 Z" fill="#000"/>
+             <ellipse cx="50" cy="40" rx="15" ry="12" fill="#000"/>
+             <path d="M35,30 L40,20 L45,30 Z" fill="#000"/>
+             <path d="M55,30 L60,20 L65,30 Z" fill="#000"/>
+             <path d="M60,60 Q70,55 75,50 Q80,45 75,40" stroke="#000" stroke-width="3" fill="none"/>
+             <path d="M40,60 Q30,55 25,50 Q20,45 25,40" stroke="#000" stroke-width="3" fill="none"/>`,
+            
+            // Sleeping pose
+            `<ellipse cx="50" cy="60" rx="20" ry="15" fill="#000"/>
+             <ellipse cx="50" cy="45" rx="12" ry="8" fill="#000"/>
+             <path d="M38,40 L43,35 L48,40 Z" fill="#000"/>
+             <path d="M52,40 L57,35 L62,40 Z" fill="#000"/>
+             <path d="M45,50 Q50,52 55,50" stroke="#000" stroke-width="1" fill="none"/>`,
+            
+            // Playing pose
+            `<path d="M35,65 Q40,55 50,60 Q60,55 65,65 Q70,75 65,85 Q60,90 50,85 Q40,90 35,85 Q30,75 35,65 Z" fill="#000"/>
+             <ellipse cx="50" cy="45" rx="15" ry="12" fill="#000"/>
+             <path d="M35,35 L40,25 L45,35 Z" fill="#000"/>
+             <path d="M55,35 L60,25 L65,35 Z" fill="#000"/>
+             <path d="M65,60 Q75,55 80,50" stroke="#000" stroke-width="2" fill="none"/>`,
+            
+            // Watching pose
+            `<path d="M30,70 Q40,65 50,70 Q60,65 70,70 L70,85 Q65,90 60,85 Q55,90 50,85 Q45,90 40,85 Q35,90 30,85 Z" fill="#000"/>
+             <path d="M40,50 Q45,40 50,45 Q55,40 60,50 Q65,60 60,70 Q55,75 50,70 Q45,75 40,70 Q35,60 40,50 Z" fill="#000"/>
+             <ellipse cx="50" cy="40" rx="15" ry="12" fill="#000"/>
+             <path d="M35,30 L40,20 L45,30 Z" fill="#000"/>
+             <path d="M55,30 L60,20 L65,30 Z" fill="#000"/>
+             <circle cx="45" cy="40" r="2" fill="#fff"/>
+             <circle cx="55" cy="40" r="2" fill="#fff"/>`,
+            
+            // Yawning pose
+            `<path d="M30,70 Q40,65 50,70 Q60,65 70,70 L70,85 Q65,90 60,85 Q55,90 50,85 Q45,90 40,85 Q35,90 30,85 Z" fill="#000"/>
+             <path d="M40,50 Q45,40 50,45 Q55,40 60,50 Q65,60 60,70 Q55,75 50,70 Q45,75 40,70 Q35,60 40,50 Z" fill="#000"/>
+             <ellipse cx="50" cy="40" rx="15" ry="12" fill="#000"/>
+             <path d="M35,30 L40,20 L45,30 Z" fill="#000"/>
+             <path d="M55,30 L60,20 L65,30 Z" fill="#000"/>
+             <ellipse cx="50" cy="45" rx="5" ry="3" fill="#fff"/>`,
+            
+            // Cleaning pose
+            `<path d="M35,65 Q40,55 50,60 Q60,55 65,65 Q70,75 65,85 Q60,90 50,85 Q40,90 35,85 Q30,75 35,65 Z" fill="#000"/>
+             <ellipse cx="50" cy="45" rx="15" ry="12" fill="#000"/>
+             <path d="M35,35 L40,25 L45,35 Z" fill="#000"/>
+             <path d="M55,35 L60,25 L65,35 Z" fill="#000"/>
+             <path d="M40,50 Q30,45 25,40" stroke="#000" stroke-width="3" fill="none"/>`,
+            
+            // Mystical pose
+            `<path d="M30,70 Q40,65 50,70 Q60,65 70,70 L70,85 Q65,90 60,85 Q55,90 50,85 Q45,90 40,85 Q35,90 30,85 Z" fill="#000"/>
+             <path d="M40,50 Q45,40 50,45 Q55,40 60,50 Q65,60 60,70 Q55,75 50,70 Q45,75 40,70 Q35,60 40,50 Z" fill="#000"/>
+             <ellipse cx="50" cy="40" rx="15" ry="12" fill="#000"/>
+             <path d="M35,30 L40,20 L45,30 Z" fill="#000"/>
+             <path d="M55,30 L60,20 L65,30 Z" fill="#000"/>
+             <circle cx="50" cy="40" r="8" fill="rgba(138,43,226,0.3)" stroke="rgba(138,43,226,0.8)" stroke-width="1"/>`
+        ];
         
         // Initialize the game
         document.addEventListener('DOMContentLoaded', () => {
@@ -855,9 +1523,21 @@
             questionBox.style.transition = 'opacity 0.5s ease';
             questionBox.style.opacity = '1';
             
-            // Animate crystal ball
+            // Update Mysti's silhouette pose
+            const mystiImage = document.getElementById('mysti-silhouette');
+            const poseIndex = currentQuestionIndex % mystiPoses.length;
+            mystiImage.innerHTML = mystiPoses[poseIndex];
+            
+            // Add some animation to the silhouette
+            mystiImage.style.transform = 'translateY(-5px) scale(1.05)';
+            setTimeout(() => {
+                mystiImage.style.transform = 'translateY(0) scale(1)';
+            }, 300);
+            
+            // Show Mysti's cute message based on progress
+            const mystiMessage = mystiMessages[currentQuestionIndex % mystiMessages.length];
             const ballContent = document.getElementById('ball-content');
-            ballContent.children[0].textContent = "Concentrate on your answer...";
+            ballContent.children[0].textContent = mystiMessage;
             ballContent.children[0].classList.remove('opacity-0');
             
             setTimeout(() => {
@@ -870,9 +1550,9 @@
             // Store answer
             answers.push(optionIndex);
             
-            // Animate crystal ball
+            // Animate crystal ball with a different message
             const ballContent = document.getElementById('ball-content');
-            ballContent.children[0].textContent = "The mists are clearing...";
+            ballContent.children[0].textContent = "Mysti is processing your answer... 🐱";
             ballContent.children[0].classList.remove('opacity-0');
             
             // Smoothly fade out question box
@@ -915,9 +1595,38 @@
             // Show result screen
             document.getElementById('result-screen').classList.remove('hidden');
             
+            // Update Mysti to a special final pose with cartoony celebration
+            const mystiImage = document.getElementById('mysti-silhouette');
+            mystiImage.innerHTML = `<path d="M30,70 Q40,65 50,70 Q60,65 70,70 L70,85 Q65,90 60,85 Q55,90 50,85 Q45,90 40,85 Q35,90 30,85 Z" fill="#000"/>
+             <path d="M40,50 Q45,40 50,45 Q55,40 60,50 Q65,60 60,70 Q55,75 50,70 Q45,75 40,70 Q35,60 40,50 Z" fill="#000"/>
+             <ellipse cx="50" cy="40" rx="15" ry="12" fill="#000"/>
+             <path d="M35,30 L40,20 L45,30 Z" fill="#000"/>
+             <path d="M55,30 L60,20 L65,30 Z" fill="#000"/>
+             <circle cx="50" cy="40" r="12" fill="rgba(255,215,0,0.3)" stroke="rgba(255,215,0,0.8)" stroke-width="2"/>
+             <circle cx="50" cy="40" r="15" fill="rgba(255,215,0,0.2)" stroke="rgba(255,215,0,0.6)" stroke-width="1"/>`; // Special final pose
+            
+            // Cartoony celebration animation
+            mystiImage.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            mystiImage.style.transform = 'scale(1.5) rotate(360deg)';
+            mystiImage.style.filter = 'drop-shadow(0 0 20px rgba(255, 215, 0, 0.9))';
+            
+            // Bounce effect
+            setTimeout(() => {
+                mystiImage.style.transform = 'scale(1.3) rotate(0deg)';
+                setTimeout(() => {
+                    mystiImage.style.transform = 'scale(1.5) rotate(-10deg)';
+                    setTimeout(() => {
+                        mystiImage.style.transform = 'scale(1.3) rotate(10deg)';
+                        setTimeout(() => {
+                            mystiImage.style.transform = 'scale(1.4) rotate(0deg)';
+                        }, 150);
+                    }, 150);
+                }, 200);
+            }, 500);
+            
             // Animate crystal ball with final message
             const ballContent = document.getElementById('ball-content');
-            ballContent.children[0].textContent = "Your fate is sealed!";
+            ballContent.children[0].textContent = "Mysti has spoken!";
             ballContent.children[0].classList.remove('opacity-0');
         }
         
@@ -930,11 +1639,30 @@
             document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('main-menu').classList.remove('hidden');
             
+            // Reset Mysti to initial pose with cartoony exit animation
+            const mystiImage = document.getElementById('mysti-silhouette');
+            mystiImage.style.transition = 'transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            mystiImage.style.transform = 'translateY(-30px) scale(0.8) rotate(-15deg)';
+            
+            setTimeout(() => {
+                mystiImage.innerHTML = mystiPoses[0];
+                mystiImage.style.transform = 'translateY(0) scale(1) rotate(0deg)';
+                mystiImage.style.filter = 'drop-shadow(0 0 10px rgba(138, 43, 226, 0.8))';
+                
+                // Little bounce at the end
+                setTimeout(() => {
+                    mystiImage.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        mystiImage.style.transform = 'translateY(0)';
+                    }, 100);
+                }, 50);
+            }, 400);
+            
             // Reset crystal ball message
             const ballContent = document.getElementById('ball-content');
-            ballContent.children[0].textContent = "Your fate awaits...";
+            ballContent.children[0].textContent = "Mysti awaits your question...";
             ballContent.children[0].classList.add('opacity-0');
         }
     </script>
-
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=44444t/never-teller" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
 </html>
